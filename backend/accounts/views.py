@@ -61,6 +61,10 @@
 #         {"message": "Registration successful. Please verify your email."},
 #         status=status.HTTP_201_CREATED
 #     )
+
+def home(request):
+    return JsonResponse({"message": "Civic Complaint System API is running"})
+
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.parsers import MultiPartParser, FormParser
