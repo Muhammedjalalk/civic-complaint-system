@@ -75,7 +75,6 @@ setuptools==82.0.1
 six==1.17.0
 soupsieve==2.8
 sqlparse==0.5.3
-tensorflow==2.21.0
 termcolor==3.3.0
 threadpoolctl==3.6.0
 tqdm==4.67.3
