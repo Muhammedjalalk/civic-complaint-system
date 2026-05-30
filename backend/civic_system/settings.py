@@ -50,7 +50,11 @@ INSTALLED_APPS = [
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '.onrender.com'
+]
 
 
 MIDDLEWARE = [
@@ -189,8 +193,8 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "muhammedjalal928@gmail.com"
-EMAIL_HOST_PASSWORD = "gkwt mnrp zohn rnat"  # Use app password, not your main password
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD") # Use app password, not your main password
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
