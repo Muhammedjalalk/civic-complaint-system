@@ -199,7 +199,8 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 
-# AUTH_USER_MODEL = 'citizen.Citizen'  # examplecelery -A civic_system worker -l info 
-# AUTH_USER_MODEL = "Staff.Staff"
-AUTH_USER_MODEL = "accounts.User"
-
+# AUTH_USER_MODEL = 'citizen.Citizen'  # examplecele<<<<<<< HEAD
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")  # Use app password, not your main password
+=======
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD") # Use app password, not your main password
+>>>>>>> 25efd1bcfb6b13ecfe6c343bbfc986ed7c750d1f
