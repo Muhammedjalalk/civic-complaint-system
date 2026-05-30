@@ -18,9 +18,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+<<<<<<< HEAD
 from accounts.views import home 
 urlpatterns = [
     path('', home), 
+=======
+from accounts.views import home  
+
+urlpatterns = [
+    path('', home),
+>>>>>>> 72d6597b834827a8f31f9d6bd205ec3e9f1f902a
     path('admin/', admin.site.urls),
     path('api/accounts/', include('accounts.urls')),
     # path('api/citizen/', include('citizen.urls')),

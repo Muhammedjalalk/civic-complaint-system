@@ -61,10 +61,17 @@
 #         {"message": "Registration successful. Please verify your email."},
 #         status=status.HTTP_201_CREATED
 #     )
+<<<<<<< HEAD
 from django.http import JsonResponse
 
 def home(request):
     return JsonResponse({"message": "Civic Complaint System API is running"})
+=======
+
+def home(request):
+    return JsonResponse({"message": "Civic Complaint System API is running"})
+
+>>>>>>> 72d6597b834827a8f31f9d6bd205ec3e9f1f902a
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.parsers import MultiPartParser, FormParser
