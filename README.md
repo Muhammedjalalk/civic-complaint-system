@@ -26,5 +26,18 @@ A full-stack web application that allows citizens to submit, track, and manage c
 | Tools | Git, GitHub, Postman, VS Code |
 
 ---
+## 📸 Screenshots
+
+![Login Dashboard](screenshots/Login_dashboard.png)
+
+![Citizen Register](screenshots/Citizen_Register_dashboard.png)
+
+![Officer Register](screenshots/Officer_Register_dashboard.png)
+
+![Report Complaint](screenshots/Report_Complaint_dashboard.png)
+
+![Staff Register](screenshots/Staff_Register_dashboard.png)
+
+---
 
 ## 📁 Project Structure
