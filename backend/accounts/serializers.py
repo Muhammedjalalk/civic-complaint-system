@@ -30,27 +30,7 @@ class CitizenProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ["id", "full_name", "email", "phone"]
 
-# class ComplaintSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Complaint
-#         fields = "__all__"
-#         read_only_fields = ["citizen", "created_at", "reply"]
-# from rest_framework import serializers
-# from .models import Complaint
-# from accounts.models import Department  # ✅ import Department
 
-# class ComplaintSerializer(serializers.ModelSerializer):
-#     departments = serializers.PrimaryKeyRelatedField(
-#         queryset=Department.objects.all(),
-#         many=True
-#     )
-
-#     class Meta:
-#         model = Complaint
-#         fields = "__all__"
-#         read_only_fields = ["citizen", "created_at", "reply"]
-
-# serializers.py
 from rest_framework import serializers
 from .models import Complaint, Department
 
@@ -66,56 +46,10 @@ class DepartmentSerializer(serializers.ModelSerializer):
         fields = ["id", "name", "parent_name"]
 
 
-# class ComplaintSerializer(serializers.ModelSerializer):
-#     department = serializers.SerializerMethodField()
-    
-#     class Meta:
-#         model = Complaint
-#         fields = (
-#             'id', 'priority', 'location', 'description', 'attachment', 'status',
-#             'created_at', 'department',
-#         )
 
-#     def get_department(self, obj):
-#         # assuming many-to-many relation
-#         departments = obj.departments.all()  # or related_name
-#         return ", ".join([d.name for d in departments])
 
 from rest_framework import serializers
 from .models import Complaint, Department
-
-
-# class ComplaintCreateSerializer(serializers.ModelSerializer):
-#     departments = serializers.PrimaryKeyRelatedField(
-#         queryset=Department.objects.all(),
-#         many=True,
-#         write_only=True
-#     )
-
-#     class Meta:
-#         model = Complaint
-#         fields = [
-#             "priority",
-#             "location",
-#             "description",
-#             "attachment",
-#             "departments"
-#         ]
-
-#     def create(self, validated_data):
-#         departments = validated_data.pop("departments")
-
-#         complaint = Complaint.objects.create(
-#             citizen=self.context["request"].user,
-#             **validated_data
-#         )
-
-#         # 🔥 CRITICAL LINE
-#         complaint.departments.set(departments)
-
-#         return complaint
-
-# complaints/serializers.py
 from rest_framework import serializers
 from .models import Complaint
 from .ai_department_engine import detect_departments
@@ -166,10 +100,6 @@ class ComplaintSerializer(serializers.ModelSerializer):
 
 
 
-
-
-
-
 # officer_serilizer parts
 from rest_framework import serializers
 from accounts.models import User
@@ -200,54 +130,6 @@ class OfficerRegisterSerializer(serializers.ModelSerializer):
 
 from rest_framework import serializers
 from accounts.models import Complaint
-
-
-# class ComplaintSerializer(serializers.ModelSerializer):
-#     citizen_name = serializers.CharField(
-#         source="citizen.name",
-#         read_only=True
-#     )
-#     citizen_email = serializers.EmailField(
-#         source="citizen.email",
-#         read_only=True
-#     )
-
-#     class Meta:
-#         model = Complaint
-#         fields = [
-#             "id",
-#             "citizen",
-#             "citizen_name",
-#             "citizen_email",
-#             "category",
-#             "priority",
-#             "department",
-#             "location",
-#             "description",
-#             "attachment",
-#             "status",
-#             "reply",
-#             "created_at",
-#             "updated_at",
-#         ]
-#         read_only_fields = [
-#             "id",
-#             "citizen",
-#             "status",
-#             "reply",
-#             "created_at",
-#             "updated_at",
-#         ]
-
-# from rest_framework import serializers
-# from .models import Complaint
-
-# class ComplaintGeoSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Complaint
-#         fields = ['id', 'category', 'priority', 'latitude', 'longitude', 'status', 'created_at']
-
-
 from rest_framework import serializers
 from .models import CitizenMeeting
 
@@ -272,16 +154,6 @@ class ComplaintGeoSerializer(serializers.ModelSerializer):
             'longitude',
             'created_at',
         ]
-
-
-#Suggection serilizer
-# serializers.py
-
-# serializers.py
-
-# serializers.py
-
-
 
 # Tracking Serilizers.py 
 from rest_framework import serializers

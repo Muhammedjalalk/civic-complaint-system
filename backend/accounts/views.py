@@ -1,77 +1,10 @@
-# from rest_framework.decorators import api_view, permission_classes
-# from rest_framework.permissions import AllowAny
-# from rest_framework.response import Response
-# from rest_framework import status
-# from django.contrib.auth.tokens import default_token_generator
-# from django.urls import reverse
 
-# from accounts.models import User
-# from .tasks import send_verification_email_task
-
-
-# from django.utils.http import urlsafe_base64_encode
-# from django.utils.encoding import force_bytes
-
-# @api_view(['POST'])
-# @permission_classes([AllowAny])
-# def citizen_register(request):
-#     data = request.data
-
-#     full_name = data.get("full_name")
-#     email = data.get("email")
-#     phone = data.get("phone")
-#     password = data.get("password")
-#     place = data.get("place")
-#     pin = data.get("pin")
-
-#     if not all([full_name, email, phone, password]):
-#         return Response(
-#             {"error": "All fields are required"},
-#             status=status.HTTP_400_BAD_REQUEST
-#         )
-
-#     if User.objects.filter(email=email).exists():
-#         return Response(
-#             {"error": "Email already registered"},
-#             status=status.HTTP_400_BAD_REQUEST
-#         )
-
-#     user = User.objects.create_user(
-#         email=email,
-#         full_name=full_name,
-#         phone=phone,
-#         place=place,
-#         pin=pin,
-#         password=password,
-#         role="CITIZEN",
-#         is_active=False
-#     )
-
-#     uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-#     token = default_token_generator.make_token(user)
-
-#     verification_url = request.build_absolute_uri(
-#         reverse("citizen-verify-email") +
-#         f"?uid={uidb64}&token={token}"
-#     )
-
-#     send_verification_email_task.delay(user.email, verification_url)
-
-#     return Response(
-#         {"message": "Registration successful. Please verify your email."},
-#         status=status.HTTP_201_CREATED
-#     )
-<<<<<<< HEAD
 from django.http import JsonResponse
 
 def home(request):
     return JsonResponse({"message": "Civic Complaint System API is running"})
-=======
 
-def home(request):
-    return JsonResponse({"message": "Civic Complaint System API is running"})
 
->>>>>>> 72d6597b834827a8f31f9d6bd205ec3e9f1f902a
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -87,72 +20,6 @@ from accounts.models import User
 from .tasks import send_verification_email_task
 
 
-# @api_view(["POST"])
-# @permission_classes([AllowAny])
-# @parser_classes([MultiPartParser, FormParser])
-# def citizen_register(request):
-
-#     data = request.data
-
-#     full_name = data.get("full_name")
-#     email = data.get("email")
-#     phone = data.get("phone")
-#     password = data.get("password")
-#     place = data.get("place")
-#     pin = data.get("pin")
-
-#     document_type = data.get("document_type")
-#     government_document = request.FILES.get("government_document")
-
-#     # 🔴 Validation
-#     if not all([full_name, email, phone, password, document_type, government_document]):
-#         return Response(
-#             {"error": "All fields including government document are required"},
-#             status=status.HTTP_400_BAD_REQUEST
-#         )
-
-#     if User.objects.filter(email=email).exists():
-#         return Response(
-#             {"error": "Email already registered"},
-#             status=status.HTTP_400_BAD_REQUEST
-#         )
-
-#     # ✅ Create citizen
-#     user = User.objects.create_user(
-#     email=email,
-#     full_name=full_name,
-#     phone=phone,
-#     place=place,
-#     pin=pin,
-#     password=password,
-#     role="CITIZEN",
-#     document_type=document_type,
-#     approval_status="Pending",
-#     document_verified=False,
-#     is_active=False
-# )
-
-# # ✅ Save uploaded file properly
-# user.government_document = government_document
-# user.save()
-
-#     # 📧 Email verification
-#     uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-#     token = default_token_generator.make_token(user)
-
-#     verification_url = request.build_absolute_uri(
-#         reverse("citizen-verify-email") +
-#         f"?uid={uidb64}&token={token}"
-#     )
-
-#     send_verification_email_task.delay(user.email, verification_url)
-
-#     return Response(
-#         {
-#             "message": "Registration successful. Verify email and wait for document approval."
-#         },
-#         status=status.HTTP_201_CREATED
-#     )
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -219,7 +86,6 @@ def citizen_register(request):
         is_active=False
     )
 
-    # ✅ Attach uploaded document
     user.government_document = government_document
     user.save()
 
@@ -322,55 +188,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from accounts.models import User
 
 
-# @api_view(["POST"])
-# @permission_classes([AllowAny])
-# def citizen_login(request):
-#     email = request.data.get("email")
-#     password = request.data.get("password")
-
-#     if not email or not password:
-#         return Response(
-#             {"error": "Email and password are required"},
-#             status=status.HTTP_400_BAD_REQUEST
-#         )
-
-#     try:
-#         user = User.objects.get(email=email, role="CITIZEN")
-#     except User.DoesNotExist:
-#         return Response(
-#             {"error": "Invalid email or password"},
-#             status=status.HTTP_400_BAD_REQUEST
-#         )
-
-#     if not user.check_password(password):
-#         return Response(
-#             {"error": "Invalid email or password"},
-#             status=status.HTTP_400_BAD_REQUEST
-#         )
-
-#     if not user.is_active:
-#         return Response(
-#             {"error": "Email not verified. Please verify your email first."},
-#             status=status.HTTP_403_FORBIDDEN
-#         )
-
-#     # ✅ Generate JWT tokens
-#     refresh = RefreshToken.for_user(user)
-
-#     return Response(
-#         {
-#             "message": "Login successful",
-#             "user": {
-#                 "id": user.id,
-#                 "email": user.email,
-#                 "full_name": user.full_name,
-#                 "role": user.role,
-#             },
-#             "access": str(refresh.access_token),
-#             "refresh": str(refresh),
-#         },
-#         status=status.HTTP_200_OK
-#     )
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def citizen_login(request):
@@ -397,14 +214,14 @@ def citizen_login(request):
             status=status.HTTP_400_BAD_REQUEST
         )
 
-    # 📧 EMAIL VERIFICATION CHECK
+    #  EMAIL VERIFICATION CHECK
     if not user.is_active:
         return Response(
             {"error": "Email not verified. Please verify your email first."},
             status=status.HTTP_403_FORBIDDEN
         )
 
-    # 🛂 ADMIN APPROVAL CHECK
+    #  ADMIN APPROVAL CHECK
     if user.approval_status != "Approved":
         return Response(
             {"error": "Account not approved by admin yet."},
@@ -441,7 +258,7 @@ class CitizenProfileView(APIView):
     def get(self, request):
         user = request.user
 
-        # 🔒 Ensure only citizens can access this API
+        # Ensure only citizens can access this API
         if user.role != "CITIZEN":
             return Response(
                 {"error": "Access denied"},
@@ -510,37 +327,6 @@ class CitizenComplaintView(APIView):
         serializer = ComplaintSerializer(complaints, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
-# class CitizenComplaintHistoryView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request):
-#         user = request.user
-
-#         # 🔒 Only citizens allowed
-#         if user.role != "CITIZEN":
-#             return Response(
-#                 {"error": "Access denied"},
-#                 status=status.HTTP_403_FORBIDDEN
-#             )
-
-#         status_filter = request.query_params.get("status")
-#         complaints = Complaint.objects.filter(citizen=user)
-
-#         if status_filter:
-#             complaints = complaints.filter(
-#                 assignments__status=status_filter
-#             ).distinct()
-
-#         if not complaints.exists():
-#             return Response(
-#                 {"message": "No complaints found"},
-#                 status=status.HTTP_404_NOT_FOUND
-#             )
-
-#         # Pass request context here
-#         serializer = ComplaintSerializer(complaints, many=True, context={'request': request})
-#         return Response(serializer.data, status=status.HTTP_200_OK)
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -594,7 +380,7 @@ class CitizenComplaintDeleteView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-        # ✅ FIXED STATUS CHECK
+        #  FIXED STATUS CHECK
         if complaint.status.lower() != "pending":
             return Response(
                 {"error": "Cannot delete complaint after processing"},
@@ -668,33 +454,6 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import OfficerRegisterSerializer
-
-
-# from accounts.models import User
-# from .serializers import OfficerRegisterSerializer
-
-
-# class OfficerRegisterView(APIView):
-#     permission_classes = [AllowAny]
-
-#     def post(self, request):
-#         serializer = OfficerRegisterSerializer(data=request.data)
-
-#         if serializer.is_valid():
-#             officer = serializer.save(
-#                 role="OFFICER",
-#                 approval_status="Pending",
-#                 is_active=False   # 🔒 admin must approve
-#             )
-
-#             return Response(
-#                 {
-#                     "message": "Officer registered successfully. Please wait for admin approval."
-#                 },
-#                 status=status.HTTP_201_CREATED
-#             )
-
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
@@ -792,21 +551,21 @@ def officer_login(request):
             status=status.HTTP_400_BAD_REQUEST
         )
 
-    # 🔒 Admin approval check
+    #  Admin approval check
     if officer.approval_status != "Approved":
         return Response(
             {"error": "Officer account not approved by admin"},
             status=status.HTTP_403_FORBIDDEN
         )
 
-    # 🔒 Active check
+    #  Active check
     if not officer.is_active:
         return Response(
             {"error": "Account inactive"},
             status=status.HTTP_403_FORBIDDEN
         )
 
-    # ✅ Generate JWT tokens
+    #  Generate JWT tokens
     refresh = RefreshToken.for_user(officer)
 
     return Response(
@@ -832,63 +591,27 @@ from rest_framework import status
 
 from accounts.models import Complaint
 from accounts.serializers import ComplaintSerializer
-
-
-# class OfficerComplaintView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request):
-#         user = request.user
-
-#         # 🔒 Only officers allowed
-#         if user.role != "OFFICER":
-#             return Response(
-#                 {"error": "Access denied"},
-#                 status=status.HTTP_403_FORBIDDEN
-#             )
-
-#         # 🔒 Officer must have department
-#         if not user.department:
-#             return Response(
-#                 {"error": "Department not assigned"},
-#                 status=status.HTTP_400_BAD_REQUEST
-#             )
-
-#         # 🔍 Filter complaints by department
-#         complaints = Complaint.objects.filter(
-#             department=user.department
-#         ).order_by("-created_at")
-
-#         serializer = ComplaintSerializer(complaints, many=True)
-
-#         return Response(
-#             {
-#                 "count": complaints.count(),
-#                 "complaints": serializer.data
-#             },
-#             status=status.HTTP_200_OK
-#         )
 class OfficerComplaintView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         user = request.user
 
-        # 🔒 Only officers allowed
+        #  Only officers allowed
         if user.role != "OFFICER":
             return Response(
                 {"error": "Access denied"},
                 status=status.HTTP_403_FORBIDDEN
             )
 
-        # 🔒 Officer must have department
+        #  Officer must have department
         if not user.department:
             return Response(
                 {"error": "Department not assigned"},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # ✅ CORRECT FILTER FOR ManyToManyField
+        #  CORRECT FILTER FOR ManyToManyField
         complaints = Complaint.objects.filter(
             departments=user.department
         ).order_by("-created_at")
@@ -907,7 +630,7 @@ class OfficerComplaintView(APIView):
 
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from accounts.models import User  # ✅ single User model
+from accounts.models import User  # single User model
 from django.utils import timezone
 
 @csrf_exempt
@@ -943,7 +666,7 @@ from accounts.models import User
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def update_staff_status(request, staff_id):
-    # 🔒 Only admin can update staff status
+    #  Only admin can update staff status
     if request.user.role != "ADMIN":
         return Response({"error": "Access denied"}, status=status.HTTP_403_FORBIDDEN)
 
@@ -975,28 +698,6 @@ def update_staff_status(request, staff_id):
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
-# from rest_framework.views import APIView
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
-# from rest_framework import status
-# from accounts.models import User
-
-# class OfficerStaffListView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request):
-#         # 🔒 Only OFFICER can access
-#         if request.user.role != "OFFICER":
-#             return Response({"error": "Access denied"}, status=status.HTTP_403_FORBIDDEN)
-
-#         # Get all approved staff
-#         approved_staff = User.objects.filter(
-#             role="STAFF",
-#             approval_status="Approved"
-#         ).values("id", "full_name")
-
-#         return Response({"staff": list(approved_staff)}, status=status.HTTP_200_OK)
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -1007,7 +708,7 @@ class OfficerStaffListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        # 🔒 Only OFFICER can access
+        #  Only OFFICER can access
         if request.user.role != "OFFICER":
             return Response(
                 {"error": "Access denied"},
@@ -1032,132 +733,6 @@ class OfficerStaffListView(APIView):
             status=status.HTTP_200_OK
         )
 
-
-# from rest_framework.views import APIView
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
-# from rest_framework import status
-
-# from accounts.models import User, Complaint
-# from accounts.models import ComplaintAssignment  # adjust if in separate app
-
-
-# class AssignComplaintView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def post(self, request):
-#         user = request.user
-
-#         # 🔒 Only OFFICER can assign complaints
-#         if user.role != "OFFICER":
-#             return Response({"error": "Access denied"}, status=status.HTTP_403_FORBIDDEN)
-
-#         complaint_id = request.data.get("complaint_id")
-#         staff_id = request.data.get("staff_id")
-#         remarks = request.data.get("remarks", "")
-
-#         if not complaint_id or not staff_id:
-#             return Response(
-#                 {"error": "complaint_id and staff_id are required"},
-#                 status=status.HTTP_400_BAD_REQUEST
-#             )
-
-#         try:
-#             complaint = Complaint.objects.get(id=complaint_id)
-#         except Complaint.DoesNotExist:
-#             return Response({"error": "Complaint not found"}, status=status.HTTP_404_NOT_FOUND)
-
-#         try:
-#             staff = User.objects.get(id=staff_id, role="STAFF", approval_status="Approved")
-#         except User.DoesNotExist:
-#             return Response({"error": "Staff not found or not approved"}, status=status.HTTP_404_NOT_FOUND)
-
-#         # 🔹 Create assignment entry
-#         assignment = ComplaintAssignment.objects.create(
-#             complaint=complaint,
-#             assigned_to=staff,
-#             assigned_by=user,
-#             status="Assigned",
-#             remarks=remarks
-#         )
-
-#         # 🔹 Keep complaint status in sync
-#         complaint.status = "Assigned"
-#         complaint.save()
-
-#         return Response(
-#             {
-#                 "message": "Complaint assigned successfully",
-#                 "assignment_id": assignment.id,
-#                 "complaint_id": complaint.id,
-#                 "assigned_to": {"id": staff.id, "full_name": staff.full_name},
-#                 "assigned_by": {"id": user.id, "full_name": user.full_name},
-#                 "status": assignment.status,
-#                 "assigned_at": assignment.assigned_at
-#             },
-#             status=status.HTTP_201_CREATED
-#         )
-# from rest_framework.views import APIView
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
-# from rest_framework import status
-
-# from accounts.models import ComplaintAssignment
-
-
-# class officerAssignComplaintView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request):
-#         user = request.user
-
-#         # 🔒 Only STAFF allowed
-#         if user.role != "STAFF":
-#             return Response(
-#                 {"error": "Access denied"},
-#                 status=status.HTTP_403_FORBIDDEN
-#             )
-
-#         # 🔒 Staff must have a department
-#         if not user.department:
-#             return Response(
-#                 {"error": "Department not assigned"},
-#                 status=status.HTTP_400_BAD_REQUEST
-#             )
-
-#         # ✅ Get complaints assigned to this staff & matching department
-#         assignments = ComplaintAssignment.objects.filter(
-#             assigned_to=user,
-#             complaint__departments=user.department
-#         ).select_related("complaint", "assigned_by")
-
-#         data = []
-#         for assignment in assignments:
-#             complaint = assignment.complaint
-
-#             data.append({
-#                 "assignment_id": assignment.id,
-#                 "complaint_id": complaint.id,
-#                 "priority": complaint.priority,
-#                 "location": complaint.location,
-#                 "latitude": complaint.latitude,
-#                 "longitude": complaint.longitude,
-#                 "description": complaint.description,
-#                 "complaint_status": complaint.status,
-#                 "assignment_status": assignment.status,
-#                 "remarks": assignment.remarks,
-#                 "assigned_by": assignment.assigned_by.full_name if assignment.assigned_by else None,
-#                 "assigned_at": assignment.assigned_at,
-#                 "updated_at": assignment.updated_at,
-#             })
-
-#         return Response(
-#             {
-#                 "count": len(data),
-#                 "assigned_complaints": data
-#             },
-#             status=status.HTTP_200_OK
-#         )
 
 # accounts/views.py
 from rest_framework.views import APIView
@@ -1255,53 +830,6 @@ class officerAssignComplaintView (APIView):
             status=status.HTTP_201_CREATED
         )
 
-
-
-# from rest_framework.views import APIView
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
-# from rest_framework import status
-
-# from accounts.models import ComplaintAssignment  # adjust if in another app
-
-# class OfficerViewReturnedComplaints(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request):
-#         user = request.user
-
-#         # 🔒 Only officers can access
-#         if user.role != "OFFICER":
-#             return Response({"error": "Only officers can access"}, status=status.HTTP_403_FORBIDDEN)
-
-#         # 🔍 Filter complaints returned for verification
-#         returned_assignments = ComplaintAssignment.objects.filter(
-#             status="Returned"  # instead of returned_for_verification
-#         ).select_related("complaint", "assigned_to").order_by("-updated_at")
-
-#         data = []
-#         for assignment in returned_assignments:
-#             complaint = assignment.complaint
-#             staff = assignment.assigned_to
-#             data.append({
-#                 "assignment_id": assignment.id,
-#                 "status": assignment.status,
-#                 "staff_id": staff.id if staff else None,
-#                 "staff_name": staff.full_name if staff else "N/A",
-#                 "complaint_id": complaint.id,
-#                 "category": complaint.category,
-#                 "priority": complaint.priority,
-#                 "department": complaint.department,
-#                 "location": complaint.location,
-#                 "description": complaint.description,
-#                 "remarks": assignment.remarks,
-#                 "attachment": complaint.attachment.url if complaint.attachment else None,
-#                 "assigned_at": assignment.assigned_at,
-#                 "updated_at": assignment.updated_at,
-#             })
-
-#         return Response({"returned_complaints": data}, status=status.HTTP_200_OK)
-
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -1316,14 +844,14 @@ class OfficerReturnedComplaintsView(APIView):
     def get(self, request):
         user = request.user
 
-        # 🔒 Only OFFICER can access
+        #  Only OFFICER can access
         if user.role != "OFFICER":
             return Response(
                 {"error": "Only officers can view returned complaints"},
                 status=status.HTTP_403_FORBIDDEN
             )
 
-        # ✅ Get complaints returned by staff, assigned by this officer
+        #  Get complaints returned by staff, assigned by this officer
         assignments = ComplaintAssignment.objects.filter(
             status="Returned",
             assigned_by=user
@@ -1373,54 +901,6 @@ class OfficerReturnedComplaintsView(APIView):
             status=status.HTTP_200_OK
         )
 
-#staff functions parts
-# from rest_framework.decorators import api_view, permission_classes
-# from rest_framework.permissions import AllowAny
-# from rest_framework.response import Response
-# from rest_framework import status
-# from accounts.models import User,Department 
-
-# @api_view(['POST'])
-# @permission_classes([AllowAny])
-# def staff_register(request):
-#     """
-#     Staff registration endpoint.
-#     Staff registration requires officer/admin approval.
-#     """
-#     data = request.data
-#     full_name = data.get("full_name")
-#     email = data.get("email")
-#     phone = data.get("phone")
-#     password = data.get("password")
-#     license_number = data.get("license_number")
-#     department_id = data.get("department")
-#     place= data.get("place")  # formerly 'address'
-
-#     # ✅ Validate required fields
-#     if not all([full_name, email, phone, password, license_number, department_id]):
-#         return Response({"error": "All fields are required"}, status=status.HTTP_400_BAD_REQUEST)
-
-#     if User.objects.filter(email=email).exists():
-#         return Response({"error": "Email already registered"}, status=status.HTTP_400_BAD_REQUEST)
-
-#     # ✅ Create staff user (approval_status pending by default)
-#     User.objects.create_user(
-#         email=email,
-#         full_name=full_name,
-#         phone=phone,
-#         license_number=license_number,
-#         department=department_id,
-#         place= place,
-#         role="STAFF",
-#         password=password,
-#         approval_status="Pending",
-#         is_active=False  # inactive until approved
-#     )
-
-#     return Response(
-#         {"message": "Registration submitted. Wait for officer/admin approval."},
-#         status=status.HTTP_201_CREATED
-#     )
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
@@ -1441,7 +921,7 @@ def staff_register(request):
     department_id = data.get("department")  # ✅ ID from frontend
     place = data.get("place")
 
-    # ✅ Validate required fields
+    #  Validate required fields
     if not all([full_name, email, phone, password, license_number, department_id]):
         return Response(
             {"error": "All fields are required"},
@@ -1454,7 +934,7 @@ def staff_register(request):
             status=status.HTTP_400_BAD_REQUEST
         )
 
-    # ✅ Convert department ID → Department object
+    # Convert department ID → Department object
     try:
         department = Department.objects.get(id=department_id)
     except Department.DoesNotExist:
@@ -1463,13 +943,13 @@ def staff_register(request):
             status=status.HTTP_400_BAD_REQUEST
         )
 
-    # ✅ Create staff user
+    #  Create staff user
     User.objects.create_user(
         email=email,
         full_name=full_name,
         phone=phone,
         license_number=license_number,
-        department=department,  # ✅ FIXED
+        department=department,  #  FIXED
         place=place,
         role="STAFF",
         password=password,
@@ -1483,55 +963,6 @@ def staff_register(request):
     )
 
 
-# from rest_framework.decorators import api_view, permission_classes
-# from rest_framework.permissions import AllowAny
-# from rest_framework.response import Response
-# from rest_framework import status
-# from rest_framework_simplejwt.tokens import RefreshToken
-# from accounts.models import User
-
-# @api_view(['POST'])
-# @permission_classes([AllowAny])
-# def staff_login(request):
-#     """
-#     Staff login endpoint.
-#     Only approved staff can login.
-#     Returns JWT access and refresh tokens.
-#     """
-#     email = request.data.get("email")
-#     password = request.data.get("password")
-
-#     if not email or not password:
-#         return Response(
-#             {"error": "Email and password are required."},
-#             status=status.HTTP_400_BAD_REQUEST
-#         )
-
-#     try:
-#         staff = User.objects.get(email=email, role="STAFF")
-#     except User.DoesNotExist:
-#         return Response({"error": "Staff not found."}, status=status.HTTP_404_NOT_FOUND)
-
-#     # ✅ Check approval status
-#     if staff.approval_status != "Approved":
-#         return Response({"error": "Your account is not approved yet."}, status=status.HTTP_403_FORBIDDEN)
-
-#     # ✅ Check password
-#     if not staff.check_password(password):
-#         return Response({"error": "Invalid email or password."}, status=status.HTTP_401_UNAUTHORIZED)
-
-#     # 🔑 Generate JWT tokens
-#     refresh = RefreshToken.for_user(staff)
-
-#     return Response({
-#         "message": "Login successful",
-#         "staff_id": staff.id,
-#         "full_name": staff.full_name,
-#         "email": staff.email,
-#         "department": staff.department,
-#         "access": str(refresh.access_token),
-#         "refresh": str(refresh)
-#     }, status=status.HTTP_200_OK)
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def staff_login(request):
@@ -1570,49 +1001,6 @@ def staff_login(request):
     }, status=status.HTTP_200_OK)
 
 
-# from rest_framework.views import APIView
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
-# from rest_framework import status
-
-# from accounts.models import ComplaintAssignment
-
-# class StaffAssignedComplaintsView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request):
-#         staff = request.user
-
-#         # 🔒 Only STAFF can access
-#         if staff.role != "STAFF":
-#             return Response({"error": "Access denied"}, status=status.HTTP_403_FORBIDDEN)
-
-#         # 🔍 Get assigned complaints
-#         assignments = ComplaintAssignment.objects.filter(
-#             assigned_to=staff
-#         ).select_related("complaint").order_by("-assigned_at")
-
-#         data = []
-#         for assignment in assignments:
-#             complaint = assignment.complaint
-#             data.append({
-#                 "assignment_id": assignment.id,
-#                 "status": assignment.status,
-#                 "assigned_at": assignment.assigned_at,
-#                 "updated_at": assignment.updated_at,
-#                 "remarks": assignment.remarks,
-#                 "complaint": {
-#                     "id": complaint.id,
-#                     "category": complaint.category,
-#                     "priority": complaint.priority,
-#                     "department": complaint.department,
-#                     "location": complaint.location,
-#                     "description": complaint.description,
-#                     "attachment": complaint.attachment.url if complaint.attachment else None,
-#                 }
-#             })
-
-#         return Response({"assigned_complaints": data}, status=status.HTTP_200_OK)
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -1683,7 +1071,7 @@ class UpdateAssignmentStatusView(APIView):
     def patch(self, request):
         staff = request.user
 
-        # 🔒 Only STAFF can access
+        #  Only STAFF can access
         if staff.role != "STAFF":
             return Response({"error": "Access denied"}, status=status.HTTP_403_FORBIDDEN)
 
@@ -1693,7 +1081,7 @@ class UpdateAssignmentStatusView(APIView):
         if not assignment_id or not status_value:
             return Response({"error": "assignment_id and status are required"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # 🔍 Fetch assignment belonging to this staff
+        #  Fetch assignment belonging to this staff
         try:
             assignment = ComplaintAssignment.objects.get(
                 id=assignment_id,
@@ -1702,7 +1090,7 @@ class UpdateAssignmentStatusView(APIView):
         except ComplaintAssignment.DoesNotExist:
             return Response({"error": "Assignment not found for this staff"}, status=status.HTTP_404_NOT_FOUND)
 
-        # ✅ Update status
+        #  Update status
         assignment.status = status_value
         assignment.save(update_fields=["status", "updated_at"])
 
@@ -1725,7 +1113,7 @@ class ReturnComplaintToOfficer(APIView):
     def post(self, request):
         staff = request.user
 
-        # 🔒 Only STAFF can access
+        #  Only STAFF can access
         if staff.role != "STAFF":
             return Response({"error": "Only staff can return complaints"}, status=status.HTTP_403_FORBIDDEN)
 
@@ -1735,7 +1123,7 @@ class ReturnComplaintToOfficer(APIView):
         if not assignment_id:
             return Response({"error": "assignment_id is required"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # 🔍 Fetch assignment
+        #  Fetch assignment
         try:
             assignment = ComplaintAssignment.objects.get(
                 id=assignment_id,
@@ -1744,7 +1132,7 @@ class ReturnComplaintToOfficer(APIView):
         except ComplaintAssignment.DoesNotExist:
             return Response({"error": "Assignment not found for this staff"}, status=status.HTTP_404_NOT_FOUND)
 
-        # ✅ Update status to "Returned"
+        #  Update status to "Returned"
         assignment.status = "Returned"
         if remarks:
             assignment.remarks = remarks
@@ -1907,27 +1295,13 @@ class ListMeetingsView(APIView):
         return Response(serializer.data)
 
 
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from .models import Department
-
-# class DepartmentByCategoryView(APIView):
-#     def get(self, request):
-#         category_id = request.GET.get('category')
-
-#         departments = Department.objects.filter(parent_id=category_id)
-
-#         return Response([
-#             {"id": d.id, "name": d.name}
-#             for d in departments
-#         ])
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from .models import Department
 
 class DepartmentByCategoryView(APIView):
-    permission_classes = [AllowAny]  # ✅ ADD THIS LINE
+    permission_classes = [AllowAny]  #  ADD THIS LINE
 
     def get(self, request):
         category_id = request.GET.get('category')
@@ -1942,24 +1316,13 @@ class DepartmentByCategoryView(APIView):
             for d in departments
         ])
 
-
-
-# class CategoryListView(APIView):
-#     def get(self, request):
-#         categories = Department.objects.filter(parent__isnull=True)
-#         return Response([
-#             {"id": c.id, "name": c.name}
-#             for c in categories
-#         ])
-
-
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from .models import Department
 
 class CategoryListView(APIView):
-    permission_classes = [AllowAny]  # ✅ THIS IS REQUIRED
+    permission_classes = [AllowAny]  #  THIS IS REQUIRED
 
     def get(self, request):
         categories = Department.objects.filter(parent__isnull=True)
@@ -1980,7 +1343,7 @@ class StaffProfileView(APIView):
     def get(self, request):
         user = request.user
 
-        # 🔒 Only STAFF can access
+        #  Only STAFF can access
         if user.role != "STAFF":
             return Response(
                 {"error": "Access denied"},
@@ -2020,7 +1383,7 @@ class OfficerProfileView(APIView):
     def get(self, request):
         user = request.user
 
-        # 🔒 Only OFFICER can access
+        #  Only OFFICER can access
         if user.role != "OFFICER":
             return Response(
                 {"error": "Access denied"},
@@ -2047,59 +1410,6 @@ class OfficerProfileView(APIView):
             {"officer_profile": data},
             status=status.HTTP_200_OK
         )
-
-
-#suggection is optional
-# views.py
-
-# from rest_framework.views import APIView
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
-# from rest_framework import status
-
-# from .models import CitizenSuggestion
-# from .serializers import CitizenSuggestionSerializer
-
-# class CitizenSuggestionCreateView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def post(self, request):
-#         serializer = CitizenSuggestionSerializer(
-#             data=request.data,
-#             context={"request": request}
-#         )
-
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(
-#                 {"message": "Suggestion submitted successfully"},
-#                 status=status.HTTP_201_CREATED
-#             )
-
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-# from rest_framework.views import APIView
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
-# from .models import Department
-# from .serializers import DepartmentSerializer
-
-# class DepartmentListView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request):
-#         # ONLY real departments (child departments)
-#         departments = Department.objects.filter(parent__isnull=False)
-#         serializer = DepartmentSerializer(departments, many=True)
-#         return Response(serializer.data)
-
-# class CitizenSuggestionListView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request):
-#         suggestions = CitizenSuggestion.objects.filter(citizen=request.user)
-#         serializer = CitizenSuggestionSerializer(suggestions, many=True)
-#         return Response(serializer.data)
 
 
 from rest_framework.views import APIView
@@ -2139,57 +1449,6 @@ class SuggestionReplyView(APIView):
             status=status.HTTP_200_OK
         )
 
-
-# from rest_framework.views import APIView
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
-# from rest_framework import status
-# from accounts.models import User
-
-
-# class OfficerViewStaffProfile(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request, staff_id):
-#         user = request.user
-
-#         # 🔒 Only OFFICER can access
-#         if user.role != "OFFICER":
-#             return Response(
-#                 {"error": "Access denied"},
-#                 status=status.HTTP_403_FORBIDDEN
-#             )
-
-#         try:
-#             staff = User.objects.get(id=staff_id, role="STAFF")
-#         except User.DoesNotExist:
-#             return Response(
-#                 {"error": "Staff not found"},
-#                 status=status.HTTP_404_NOT_FOUND
-#             )
-
-#         data = {
-#             "id": staff.id,
-#             "full_name": staff.full_name,
-#             "email": staff.email,
-#             "phone": staff.phone,
-#             "license_number": staff.license_number,
-#             "place": staff.place,
-#             "department": {
-#                 "id": staff.department.id if staff.department else None,
-#                 "name": staff.department.name if staff.department else None,
-#             },
-#             "approval_status": staff.approval_status,
-#             "is_active": staff.is_active,
-#             "role": staff.role,
-#         }
-
-#         return Response(
-#             {"staff_profile": data},
-#             status=status.HTTP_200_OK
-#         )
-
-
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -2202,14 +1461,14 @@ class OfficerDepartmentStaffListView(APIView):
     def get(self, request):
         officer = request.user
 
-        # 🔒 Only OFFICER
+        #  Only OFFICER
         if officer.role != "OFFICER":
             return Response(
                 {"error": "Access denied"},
                 status=status.HTTP_403_FORBIDDEN
             )
 
-        # 🔒 Officer must have department
+        #  Officer must have department
         if not officer.department:
             return Response(
                 {"error": "Officer department not assigned"},
@@ -2285,182 +1544,6 @@ class OfficerViewStaffDetails(APIView):
         return Response({"staff": staff_list}, status=status.HTTP_200_OK)
 
 
-# from rest_framework.views import APIView
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
-# from rest_framework import status
-# from accounts.models import Complaint, ComplaintAssignment
-# from .models import ComplaintFinalVerification
-
-# class OfficerFinalVerificationView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def post(self, request):
-#         user = request.user
-
-#         if user.role != "OFFICER":
-#             return Response(
-#                 {"error": "Only officers can verify complaints"},
-#                 status=status.HTTP_403_FORBIDDEN
-#             )
-
-#         complaint_ids = request.data.get("complaint_ids", [])
-
-#         for cid in complaint_ids:
-#             complaint = Complaint.objects.get(id=cid)
-
-#             # save verification
-#             ComplaintFinalVerification.objects.create(
-#                 complaint=complaint,
-#                 verified_by=user
-#             )
-
-#             # update assignment status
-#             ComplaintAssignment.objects.filter(
-#                 complaint=complaint,
-#                 assigned_by=user
-#             ).update(status="Verified")
-
-#             # update complaint status
-#             complaint.status = "Verified"
-#             complaint.save()
-
-#         return Response(
-#             {"message": "Complaints verified successfully"},
-#             status=status.HTTP_200_OK
-#         )
-# from rest_framework.views import APIView
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
-# from rest_framework import status
-# from accounts.models import Complaint, ComplaintAssignment
-# from .models import ComplaintFinalVerification
-
-
-# class OfficerFinalVerificationView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def post(self, request):
-#         user = request.user
-
-#         if user.role != "OFFICER":
-#             return Response(
-#                 {"error": "Only officers can verify complaints"},
-#                 status=status.HTTP_403_FORBIDDEN
-#             )
-
-#         complaint_ids = request.data.get("complaint_ids", [])
-
-#         # ✅ TAKE REMARK FROM FRONTEND
-#         remark = request.data.get("remark") or request.data.get("remarks")
-
-#         for cid in complaint_ids:
-#             complaint = Complaint.objects.get(id=cid)
-
-#             # ✅ SAVE VERIFICATION WITH REMARK
-#             ComplaintFinalVerification.objects.create(
-#                 complaint=complaint,
-#                 verified_by=user,
-#                 remarks=remark
-#             )
-
-#             # update assignment status
-#             ComplaintAssignment.objects.filter(
-#                 complaint=complaint,
-#                 assigned_by=user
-#             ).update(status="Verified")
-
-#             # update complaint status
-#             complaint.status = "Verified"
-#             complaint.save()
-
-#         return Response(
-#             {"message": "Complaints verified successfully"},
-#             status=status.HTTP_200_OK
-#         )
-
-
-# # from .models import ComplaintEscalation
-
-# # class OfficerEscalateComplaintsView(APIView):
-# #     permission_classes = [IsAuthenticated]
-
-# #     def post(self, request):
-# #         user = request.user
-
-# #         if user.role != "OFFICER":
-# #             return Response(
-# #                 {"error": "Only officers can escalate complaints"},
-# #                 status=status.HTTP_403_FORBIDDEN
-# #             )
-
-# #         complaint_ids = request.data.get("complaint_ids", [])
-
-# #         for cid in complaint_ids:
-# #             complaint = Complaint.objects.get(id=cid)
-
-# #             ComplaintEscalation.objects.create(
-# #                 complaint=complaint,
-# #                 escalated_by=user,
-# #                 reason="Escalated after staff return"
-# #             )
-
-# #             ComplaintAssignment.objects.filter(
-# #                 complaint=complaint,
-# #                 assigned_by=user
-# #             ).update(status="Escalated")
-
-# #             complaint.status = "Escalated"
-# #             complaint.save()
-
-# #         return Response(
-# #             {"message": "Complaints escalated successfully"},
-# #             status=status.HTTP_200_OK
-# #         )
-# from .models import ComplaintEscalation, Complaint, ComplaintAssignment
-# from rest_framework.views import APIView
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
-# from rest_framework import status
-
-
-# class OfficerEscalateComplaintsView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def post(self, request):
-#         user = request.user
-
-#         if user.role != "OFFICER":
-#             return Response(
-#                 {"error": "Only officers can escalate complaints"},
-#                 status=status.HTTP_403_FORBIDDEN
-#             )
-
-#         complaint_ids = request.data.get("complaint_ids", [])
-#         remark = request.data.get("remark") or request.data.get("remarks")
-
-#         for cid in complaint_ids:
-#             complaint = Complaint.objects.get(id=cid)
-
-#             ComplaintEscalation.objects.create(
-#                 complaint=complaint,
-#                 escalated_by=user,
-#                 reason=remark  # ✅ TAKE FROM FRONTEND
-#             )
-
-#             ComplaintAssignment.objects.filter(
-#                 complaint=complaint,
-#                 assigned_by=user
-#             ).update(status="Escalated")
-
-#             complaint.status = "Escalated"
-#             complaint.save()
-
-#         return Response(
-#             {"message": "Complaints escalated successfully"},
-#             status=status.HTTP_200_OK
-#         )
-
 from .models import ComplaintEscalation, Complaint, ComplaintAssignment
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -2469,73 +1552,6 @@ from rest_framework import status
 
 from django.core.mail import send_mail
 from django.conf import settings
-
-
-# class OfficerEscalateComplaintsView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def post(self, request):
-#         user = request.user
-
-#         # 🔒 Role check
-#         if user.role != "OFFICER":
-#             return Response(
-#                 {"error": "Only officers can escalate complaints"},
-#                 status=status.HTTP_403_FORBIDDEN
-#             )
-
-#         complaint_ids = request.data.get("complaint_ids", [])
-#         remark = request.data.get("remark") or request.data.get("remarks")
-
-#         if not complaint_ids:
-#             return Response(
-#                 {"error": "Complaint IDs are required"},
-#                 status=status.HTTP_400_BAD_REQUEST
-#             )
-
-#         for cid in complaint_ids:
-#             try:
-#                 complaint = Complaint.objects.get(id=cid)
-#             except Complaint.DoesNotExist:
-#                 continue
-
-#             # ✅ Save escalation
-#             ComplaintEscalation.objects.create(
-#                 complaint=complaint,
-#                 escalated_by=user,
-#                 reason=remark
-#             )
-
-#             # ✅ Update assignment status
-#             ComplaintAssignment.objects.filter(
-#                 complaint=complaint,
-#                 assigned_by=user
-#             ).update(status="Escalated")
-
-#             # ✅ Update complaint status
-#             complaint.status = "Escalated"
-#             complaint.save()
-
-#             # ✅ SEND EMAIL TO CITIZEN
-#             citizen_email = complaint.citizen.email
-#             send_mail(
-#                 subject="Complaint Escalated",
-#                 message=(
-#                     f"Dear {complaint.citizen.full_name},\n\n"
-#                     f"Your complaint (ID: {complaint.id}) has been escalated to the concerned authority.\n\n"
-#                     f"Remarks: {remark or 'No remarks'}\n\n"
-#                     f"Thank you for using the Civic Complaint System."
-#                 ),
-#                 from_email=settings.DEFAULT_FROM_EMAIL,
-#                 recipient_list=[citizen_email],
-#                 fail_silently=True
-#             )
-
-#         return Response(
-#             {"message": "Complaints escalated and notification sent successfully"},
-#             status=status.HTTP_200_OK
-#         )
-
 from accounts.models import ComplaintEscalation, Complaint, ComplaintAssignment, User
 
 class OfficerEscalateComplaintsView(APIView):
@@ -2559,7 +1575,7 @@ class OfficerEscalateComplaintsView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        admin_user = User.objects.filter(role="ADMIN").first()  # 🔥 assign admin here
+        admin_user = User.objects.filter(role="ADMIN").first()  #  assign admin here
 
         for cid in complaint_ids:
             try:
@@ -2567,25 +1583,25 @@ class OfficerEscalateComplaintsView(APIView):
             except Complaint.DoesNotExist:
                 continue
 
-            # ✅ Save escalation with admin assignment
+            #  Save escalation with admin assignment
             ComplaintEscalation.objects.create(
                 complaint=complaint,
                 escalated_by=user,
-                escalated_to=admin_user,  # 🔥 FIX: assign admin
+                escalated_to=admin_user,  #  FIX: assign admin
                 reason=remark
             )
 
-            # ✅ Update assignment status
+            #  Update assignment status
             ComplaintAssignment.objects.filter(
                 complaint=complaint,
                 assigned_by=user
             ).update(status="Escalated")
 
-            # ✅ Update complaint status
+            #  Update complaint status
             complaint.status = "Escalated"
             complaint.save()
 
-            # ✅ Send email
+            #  Send email
             citizen_email = complaint.citizen.email
             send_mail(
                 subject="Complaint Escalated",
@@ -2605,56 +1621,6 @@ class OfficerEscalateComplaintsView(APIView):
             status=status.HTTP_200_OK
         )
 
-# app/views.py
-
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
-# from rest_framework import status
-# from accounts.models import Complaint, ComplaintAssignment
-# from .models import ComplaintFinalVerification
-
-
-# class OfficerFinalVerificationView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def post(self, request):
-#         user = request.user
-
-#         if user.role != "OFFICER":
-#             return Response(
-#                 {"error": "Only officers can verify complaints"},
-#                 status=status.HTTP_403_FORBIDDEN
-#             )
-
-#         complaint_ids = request.data.get("complaint_ids", [])
-
-#         # ✅ TAKE REMARK FROM FRONTEND
-#         remark = request.data.get("remark") or request.data.get("remarks")
-
-#         for cid in complaint_ids:
-#             complaint = Complaint.objects.get(id=cid)
-
-#             # ✅ SAVE VERIFICATION WITH REMARK
-#             ComplaintFinalVerification.objects.create(
-#                 complaint=complaint,
-#                 verified_by=user,
-#                 remarks=remark
-#             )
-
-#             # update assignment status
-#             ComplaintAssignment.objects.filter(
-#                 complaint=complaint,
-#                 assigned_by=user
-#             ).update(status="Verified")
-
-#             # update complaint status
-#             complaint.status = "Verified"
-#             complaint.save()
-
-#         return Response(
-#             {"message": "Complaints verified successfully"},
-#             status=status.HTTP_200_OK
-#         )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
@@ -2673,7 +1639,7 @@ class OfficerFinalVerificationView(APIView):
     def post(self, request):
         user = request.user
 
-        # 🔒 Role check
+        #  Role check
         if user.role != "OFFICER":
             return Response(
                 {"error": "Only officers can verify complaints"},
@@ -2695,24 +1661,24 @@ class OfficerFinalVerificationView(APIView):
             except Complaint.DoesNotExist:
                 continue
 
-            # ✅ Save final verification
+            #  Save final verification
             ComplaintFinalVerification.objects.create(
                 complaint=complaint,
                 verified_by=user,
                 remarks=remark
             )
 
-            # ✅ Update assignment status
+            #  Update assignment status
             ComplaintAssignment.objects.filter(
                 complaint=complaint,
                 assigned_to=user
             ).update(status="Verified")
 
-            # ✅ Update complaint status
+            #  Update complaint status
             complaint.status = "Verified"
             complaint.save()
 
-            # ✅ SEND EMAIL TO CITIZEN
+            #  SEND EMAIL TO CITIZEN
             citizen_email = complaint.citizen.email
 
             send_mail(
@@ -2734,111 +1700,6 @@ class OfficerFinalVerificationView(APIView):
             status=status.HTTP_200_OK
         )
 
-
-
-# from rest_framework.views import APIView
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
-# from rest_framework import status
-
-# from accounts.models import (
-#     ComplaintAssignment,
-#     ComplaintFinalVerification,
-#     ComplaintEscalation
-# )
-
-# class OfficerVerificationHistoryView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request):
-#         officer = request.user
-
-#         if officer.role != "OFFICER":
-#             return Response(
-#                 {"error": "Only officers can view verification history"},
-#                 status=status.HTTP_403_FORBIDDEN
-#             )
-
-#         history = []
-
-#         # ✅ VERIFIED COMPLAINTS
-#         verified_qs = ComplaintFinalVerification.objects.filter(
-#             verified_by=officer
-#         ).select_related("complaint")
-
-#         for v in verified_qs:
-#             assignment = ComplaintAssignment.objects.filter(
-#                 complaint=v.complaint,
-#                 assigned_by=officer
-#             ).select_related("assigned_to").first()
-
-#             history.append({
-#                 "assignment_id": assignment.id if assignment else None,
-#                 "returned_status": "Verified",
-#                 "verified_at": v.verified_at,
-#                 "final_remarks": v.remarks,
-
-#                 "staff": {
-#                     "id": assignment.assigned_to.id if assignment and assignment.assigned_to else None,
-#                     "name": assignment.assigned_to.full_name if assignment and assignment.assigned_to else None,
-#                 },
-
-#                 "complaint": {
-#                     "id": v.complaint.id,
-#                     "priority": v.complaint.priority,
-#                     "description": v.complaint.description,
-#                     "location": v.complaint.location,
-#                     "departments": [
-#                         {"id": d.id, "name": d.name}
-#                         for d in v.complaint.departments.all()
-#                     ],
-#                 }
-#             })
-
-#         # ✅ ESCALATED COMPLAINTS
-#         escalated_qs = ComplaintEscalation.objects.filter(
-#             escalated_by=officer
-#         ).select_related("complaint")
-
-#         for e in escalated_qs:
-#             assignment = ComplaintAssignment.objects.filter(
-#                 complaint=e.complaint,
-#                 assigned_by=officer
-#             ).select_related("assigned_to").first()
-
-#             history.append({
-#                 "assignment_id": assignment.id if assignment else None,
-#                 "returned_status": "Escalated",
-#                 "escalated_at": e.escalated_at,
-#                 "escalation_reason": e.reason,
-
-#                 "staff": {
-#                     "id": assignment.assigned_to.id if assignment and assignment.assigned_to else None,
-#                     "name": assignment.assigned_to.full_name if assignment and assignment.assigned_to else None,
-#                 },
-
-#                 "complaint": {
-#                     "id": e.complaint.id,
-#                     "priority": e.complaint.priority,
-#                     "description": e.complaint.description,
-#                     "location": e.complaint.location,
-#                     "departments": [
-#                         {"id": d.id, "name": d.name}
-#                         for d in e.complaint.departments.all()
-#                     ],
-#                 }
-#             })
-
-#         # 🔽 Sort by latest action
-#         history.sort(
-#             key=lambda x: x.get("verified_at") or x.get("escalated_at"),
-#             reverse=True
-#         )
-
-#         return Response(
-#             {"history": history},
-#             status=status.HTTP_200_OK
-#         )
 
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -2867,7 +1728,7 @@ class OfficerVerificationHistoryView(APIView):
         history = []
 
         # =========================
-        # ✅ VERIFIED COMPLAINTS
+        #  VERIFIED COMPLAINTS
         # =========================
         verified_qs = ComplaintFinalVerification.objects.filter(
             verified_by=officer
@@ -2884,7 +1745,7 @@ class OfficerVerificationHistoryView(APIView):
                 "returned_status": "Verified",
                 "verified_at": v.verified_at,
 
-                # ✅ OFFICER ENTERED REMARK
+                #  OFFICER ENTERED REMARK
                 "remark": v.remarks,
                 "final_remarks": v.remarks,  # keep old key
 
@@ -2906,7 +1767,7 @@ class OfficerVerificationHistoryView(APIView):
             })
 
         # =========================
-        # ✅ ESCALATED COMPLAINTS
+        #  ESCALATED COMPLAINTS
         # =========================
         escalated_qs = ComplaintEscalation.objects.filter(
             escalated_by=officer
@@ -2923,7 +1784,7 @@ class OfficerVerificationHistoryView(APIView):
                 "returned_status": "Escalated",
                 "escalated_at": e.escalated_at,
 
-                # ✅ OFFICER ENTERED REMARK
+                #  OFFICER ENTERED REMARK
                 "remark": e.reason,
                 "escalation_reason": e.reason,  # keep old key
 
@@ -2945,7 +1806,7 @@ class OfficerVerificationHistoryView(APIView):
             })
 
         # =========================
-        # 🔽 SORT BY LATEST ACTION
+        #  SORT BY LATEST ACTION
         # =========================
         history.sort(
             key=lambda x: x.get("verified_at") or x.get("escalated_at"),
@@ -2956,8 +1817,6 @@ class OfficerVerificationHistoryView(APIView):
             {"history": history},
             status=status.HTTP_200_OK
         )
-
-
 
 # views.py
 from rest_framework.views import APIView
@@ -3076,14 +1935,14 @@ class CitizenComplaintFeedbackView(APIView):
         rating = request.data.get("rating")
         comment = request.data.get("comment")
 
-        # 🔴 Validate input
+        #  Validate input
         if not complaint_id or not rating:
             return Response(
                 {"error": "Complaint and rating are required"},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # 🔍 Get complaint (only citizen's complaint)
+        #  Get complaint (only citizen's complaint)
         try:
             complaint = Complaint.objects.get(
                 id=complaint_id,
@@ -3095,7 +1954,7 @@ class CitizenComplaintFeedbackView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-        # 🛑 Prevent duplicate feedback
+        #  Prevent duplicate feedback
         if ComplaintFeedback.objects.filter(
             complaint=complaint,
             citizen=user
@@ -3105,7 +1964,7 @@ class CitizenComplaintFeedbackView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # ✅ Save feedback
+        #  Save feedback
         ComplaintFeedback.objects.create(
             complaint=complaint,
             citizen=user,
@@ -3134,7 +1993,7 @@ class OfficerViewFeedback(APIView):
     def get(self, request):
         user = request.user
 
-        # 🔐 Only OFFICER allowed
+        #  Only OFFICER allowed
         if user.role != "OFFICER":
             return Response(
                 {"error": "Unauthorized"},
@@ -3147,7 +2006,7 @@ class OfficerViewFeedback(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # 🔍 Get feedbacks related to officer department
+        #  Get feedbacks related to officer department
         feedbacks = ComplaintFeedback.objects.filter(
             complaint__departments=user.department
         ).select_related(
@@ -3191,14 +2050,14 @@ class OfficerEscalatedComplaintsView(APIView):
     def get(self, request):
         user = request.user
 
-        # ✅ Only OFFICER allowed
+        #  Only OFFICER allowed
         if user.role != "OFFICER":
             return Response(
                 {"error": "Only officers can view escalated complaints"},
                 status=status.HTTP_403_FORBIDDEN
             )
 
-        # ✅ Correct filtering logic
+        #  Correct filtering logic
         escalations = ComplaintEscalation.objects.filter(
             Q(escalated_by=user) | Q(complaint__assigned_authority=user)
         ).select_related(
@@ -3238,10 +2097,6 @@ class OfficerEscalatedComplaintsView(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
-# accounts/views.py
-# views.py
-# views.py
-# accounts/views.py
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -3272,7 +2127,7 @@ class CitizenEscalatedComplaintsView(APIView):
                     "full_name": e.escalated_by.full_name,
                     "email": e.escalated_by.email,
                 },
-                # ✅ Handle null escalated_to properly
+                #  Handle null escalated_to properly
                 "escalated_to": {
                     "id": e.escalated_to.id,
                     "full_name": e.escalated_to.full_name,
@@ -3284,76 +2139,6 @@ class CitizenEscalatedComplaintsView(APIView):
             })
         
         return Response(data)
-
-
-# from rest_framework.views import APIView
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
-# from rest_framework import status
-
-# from accounts.models import ComplaintEscalation, ComplaintFinalVerification
-
-
-# class OfficerFinalVerificationView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def post(self, request, escalation_id):
-#         user = request.user
-
-#         # ✅ role check
-#         if user.role != "OFFICER":
-#             return Response(
-#                 {"error": "Only officers can perform final verification"},
-#                 status=status.HTTP_403_FORBIDDEN
-#             )
-
-#         try:
-#             escalation = ComplaintEscalation.objects.select_related(
-#                 "complaint"
-#             ).get(id=escalation_id)
-#         except ComplaintEscalation.DoesNotExist:
-#             return Response(
-#                 {"error": "Escalation not found"},
-#                 status=status.HTTP_404_NOT_FOUND
-#             )
-
-#         # ✅ only REASSIGNED allowed
-#         if escalation.status != "REASSIGNED":
-#             return Response(
-#                 {"error": "Only reassigned complaints can be verified"},
-#                 status=status.HTTP_400_BAD_REQUEST
-#             )
-
-#         # ✅ prevent duplicate verification
-#         if ComplaintFinalVerification.objects.filter(
-#             complaint=escalation.complaint
-#         ).exists():
-#             return Response(
-#                 {"error": "Complaint already verified"},
-#                 status=status.HTTP_400_BAD_REQUEST
-#             )
-
-#         # ✅ create final verification
-#         ComplaintFinalVerification.objects.create(
-#             complaint=escalation.complaint,
-#             verified_by=user,
-#             remarks=request.data.get("remarks", "")
-#         )
-
-#         # ✅ update escalation status
-#         escalation.status = "APPROVED"
-#         escalation.save()
-
-#         return Response(
-#             {
-#                 "message": "Complaint verified successfully",
-#                 "escalation_id": escalation.id,
-#                 "complaint_id": escalation.complaint.id,
-#                 "status": escalation.status
-#             },
-#             status=status.HTTP_200_OK
-#         )
-
 
 
 from rest_framework.permissions import IsAuthenticated
@@ -3378,7 +2163,7 @@ class OfficerReassignedComplaintVerificationView(APIView):
     def post(self, request):
         user = request.user
 
-        # 🔒 Role check
+        #  Role check
         if user.role != "OFFICER":
             return Response(
                 {"error": "Only officers can verify complaints"},
@@ -3406,7 +2191,7 @@ class OfficerReassignedComplaintVerificationView(APIView):
             except Complaint.DoesNotExist:
                 continue
 
-            # ✅ Check if complaint is reassigned to this officer
+            #  Check if complaint is reassigned to this officer
             assignment = ComplaintAssignment.objects.filter(
                 complaint=complaint,
                 assigned_to=user
@@ -3418,22 +2203,22 @@ class OfficerReassignedComplaintVerificationView(APIView):
             if complaint.status not in ["REASSIGNED", "PENDING"]:
                 continue  # Only verify complaints in REASSIGNED or PENDING status
 
-            # ✅ Save final verification record
+            #  Save final verification record
             ComplaintFinalVerification.objects.create(
                 complaint=complaint,
                 verified_by=user,
                 remarks=remark
             )
 
-            # ✅ Update assignment status
+            #  Update assignment status
             assignment.status = "Verified"
             assignment.save()
 
-            # ✅ Update complaint status
+            #  Update complaint status
             complaint.status = "APPROVED"
             complaint.save()
 
-            # ✅ Send email to citizen
+            #  Send email to citizen
             citizen_email = complaint.citizen.email
             send_mail(
                 subject="Complaint Successfully Verified",
