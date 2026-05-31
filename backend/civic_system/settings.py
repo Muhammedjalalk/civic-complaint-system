@@ -92,16 +92,16 @@ WSGI_APPLICATION = 'civic_system.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default':{
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'civic_final_10',
-        'USER': 'root',
-        'PASSWORD': 'vT9@!3wQn#L7pD$z',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
-}
+# DATABASES = {
+#     'default':{
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'civic_final_10',
+#         'USER': 'root',
+#         'PASSWORD': 'vT9@!3wQn#L7pD$z',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
 
 INSTALLED_APPS += ["channels"]
 ASGI_APPLICATION = "civic_system.asgi.application"
@@ -113,6 +113,17 @@ CHANNEL_LAYERS = {
             "hosts": [("127.0.0.1", 6379)],
         },
     },
+}
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT', '3306'),
+    }
 }
 
 # Password validation
