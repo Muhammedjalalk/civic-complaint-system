@@ -1,395 +1,703 @@
-
-
-// export default Home;
-import { useState, useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "./Navbar";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "animate.css";
-import "./Home.css";
-
-// Image URLs (Replace with your actual image URLs)
-const images = {
-  hero: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
-  citizen: "https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-  officer: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-  dashboard: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-  statistics: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-  community: "https://images.unsplash.com/photo-1539635278303-d4002c07eae3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-};
 
 const Home = () => {
   const navigate = useNavigate();
-  const [currentFeature, setCurrentFeature] = useState(0);
-  const [stats, setStats] = useState({ complaints: 0, resolved: 0, users: 0, cities: 0 });
-
-  const features = [
-    { icon: "📋", title: "File Complaints", desc: "Report civic issues directly through our platform" },
-    { icon: "📊", title: "Track Progress", desc: "Monitor your complaint status in real-time" },
-    { icon: "🔔", title: "Get Updates", desc: "Receive instant notifications on issue resolution" },
-    { icon: "👥", title: "Community", desc: "Join thousands of active citizens and officers" }
-  ];
-
-  const testimonials = [
-    { name: "Sarah M.", role: "Citizen", text: "This platform made reporting issues so easy!", avatar: "👩" },
-    { name: "Officer Raj", role: "Municipal Officer", text: "Streamlined our workflow significantly", avatar: "👮" },
-    { name: "Community Group", role: "Residents", text: "Transformed how we handle local issues", avatar: "👥" }
-  ];
-
-  // Animated statistics counter
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setStats(prev => ({
-        complaints: prev.complaints >= 1247 ? 1247 : prev.complaints + 50,
-        resolved: prev.resolved >= 987 ? 987 : prev.resolved + 40,
-        users: prev.users >= 5432 ? 5432 : prev.users + 100,
-        cities: prev.cities >= 24 ? 24 : prev.cities + 1
-      }));
-    }, 50);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // Feature carousel
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentFeature((prev) => (prev + 1) % features.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
-    <div className="home-page">
-      {/* <Navbar /> */}
-      
-      {/* Hero Section */}
-      <section className="hero-section position-relative overflow-hidden">
-        <div className="hero-background" 
-             style={{
-               backgroundImage: `linear-gradient(rgba(13, 110, 253, 0.85), rgba(25, 135, 84, 0.85)), url(${images.hero})`,
-               backgroundSize: 'cover',
-               backgroundPosition: 'center'
-             }}>
-        </div>
-        
-        <div className="container position-relative z-2 py-5 py-lg-6">
-          <div className="row align-items-center min-vh-75">
-            <div className="col-lg-6 text-white animate__animated animate__fadeInLeft">
-              <h1 className="display-3 fw-bold mb-4">
-                Transforming Civic Engagement <span className="text-warning">Digitally</span>
-              </h1>
-              <p className="lead mb-5 opacity-90">
-                A unified platform connecting citizens with municipal authorities. 
-                Report issues, track resolutions, and build better communities together.
-              </p>
-              <div className="d-flex flex-wrap gap-3">
-                <button 
-                  className="btn btn-light btn-lg fw-bold px-4 py-3"
-                  onClick={() => navigate("/register")}
-                  style={{
-                    transition: 'all 0.3s ease',
-                    borderRadius: '12px'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.transform = 'translateY(-3px)';
-                    e.target.style.boxShadow = '0 10px 25px rgba(255, 255, 255, 0.3)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.transform = 'translateY(0)';
-                    e.target.style.boxShadow = 'none';
-                  }}
-                >
-                  <span className="me-2">🚀</span> Get Started
-                </button>
-                <button 
-                  className="btn btn-outline-light btn-lg fw-bold px-4 py-3"
-                  onClick={() => navigate("/login")}
-                  style={{
-                    borderWidth: '2px',
-                    transition: 'all 0.3s ease',
-                    borderRadius: '12px'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                    e.target.style.transform = 'translateY(-3px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = 'transparent';
-                    e.target.style.transform = 'translateY(0)';
-                  }}
-                >
-                  <span className="me-2">🔐</span> Login
-                </button>
-              </div>
-            </div>
-            
-            <div className="col-lg-6 mt-5 mt-lg-0 animate__animated animate__fadeInRight">
-              <div className="position-relative">
-                {/* Animated feature showcase */}
-                <div className="feature-showcase-card bg-white rounded-4 shadow-lg p-4">
-                  <div className="d-flex align-items-center mb-4">
-                    <div className="feature-icon bg-primary-gradient rounded-circle d-flex align-items-center justify-content-center me-3"
-                         style={{ width: '60px', height: '60px' }}>
-                      <span className="text-white fs-3">{features[currentFeature].icon}</span>
-                    </div>
-                    <div>
-                      <h3 className="h4 fw-bold mb-1">{features[currentFeature].title}</h3>
-                      <p className="text-muted mb-0">{features[currentFeature].desc}</p>
-                    </div>
-                  </div>
-                  <div className="d-flex justify-content-center">
-                    {features.map((_, index) => (
-                      <div 
-                        key={index}
-                        className={`dot mx-1 ${index === currentFeature ? 'active' : ''}`}
-                        style={{
-                          width: '10px',
-                          height: '10px',
-                          borderRadius: '50%',
-                          backgroundColor: index === currentFeature ? '#0d6efd' : '#dee2e6',
-                          transition: 'all 0.3s ease'
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div
+      id="home"
+      style={{
+        fontFamily: "'DM Sans', sans-serif",
+        background: "#eef1f6",
+        minHeight: "100vh",
+        color: "#1a1a2e",
+        scrollBehavior: "smooth",
+      }}
+    >
+      <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap"
+        rel="stylesheet"
+      />
 
-        {/* Floating elements */}
-        <div className="floating-elements">
-          {[...Array(5)].map((_, i) => (
-            <div 
-              key={i}
-              className="floating-element"
+      {/* Navbar */}
+      <nav
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 40px",
+          height: "64px",
+          background: "#ffffff",
+          borderBottom: "1px solid #d9dde6",
+          position: "sticky",
+          top: 0,
+          zIndex: 100,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <div
+            style={{
+              width: 32,
+              height: 32,
+              background: "#1a4fa0",
+              borderRadius: 8,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <svg
+              width="18"
+              height="18"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="#fff"
+              strokeWidth="2"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+              />
+            </svg>
+          </div>
+          <span style={{ fontWeight: 600, fontSize: 15, letterSpacing: "-0.3px" }}>
+            CivicConnect
+          </span>
+        </div>
+        <div style={{ display: "flex", gap: 32 }}>
+          {[
+            { label: "Home", id: "home" },
+            { label: "About", id: "about" },
+            { label: "Services", id: "services" },
+            { label: "Contact", id: "contact" },
+          ].map((link) => (
+            <a
+              key={link.label}
+              href={`#${link.id}`}
               style={{
-                animationDelay: `${i * 0.5}s`,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`
+                fontSize: 13,
+                color: "#6b7280",
+                textDecoration: "none",
+                fontWeight: 400,
               }}
-            />
+            >
+              {link.label}
+            </a>
           ))}
         </div>
-      </section>
+        <div style={{ display: "flex", gap: 10 }}>
+          <button
+            onClick={() => navigate("/login")}
+            style={{
+              padding: "8px 20px",
+              borderRadius: 8,
+              border: "1px solid #d9dde6",
+              background: "#fff",
+              fontSize: 13,
+              fontWeight: 500,
+              cursor: "pointer",
+              color: "#374151",
+            }}
+          >
+            Login
+          </button>
+          <button
+            onClick={() => navigate("/login")}
+            style={{
+              padding: "8px 20px",
+              borderRadius: 8,
+              border: "none",
+              background: "#1a4fa0",
+              color: "#fff",
+              fontSize: 13,
+              fontWeight: 500,
+              cursor: "pointer",
+            }}
+          >
+            Get started
+          </button>
+        </div>
+      </nav>
 
-      {/* Stats Section */}
-      <section className="py-5 bg-light">
-        <div className="container">
-          <div className="row justify-content-center mb-5">
-            <div className="col-lg-8 text-center">
-              <h2 className="display-5 fw-bold mb-3">Our Impact in Numbers</h2>
-              <p className="text-muted lead">Join thousands of users transforming their communities</p>
+      {/* Hero / Home Section */}
+      <section
+        id="home"
+        style={{
+          background: "#ffffff",
+          padding: "72px 40px 56px",
+          borderBottom: "1px solid #d9dde6",
+        }}
+      >
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ maxWidth: 600 }}>
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                background: "#eef3ff",
+                color: "#1a4fa0",
+                fontSize: 12,
+                padding: "5px 12px",
+                borderRadius: 20,
+                marginBottom: 24,
+                fontWeight: 500,
+              }}
+            >
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: "#1a4fa0",
+                  display: "inline-block",
+                }}
+              ></span>
+              Government Civic Platform
+            </div>
+            <h1
+              style={{
+                fontFamily: "'DM Serif Display', serif",
+                fontSize: 44,
+                fontWeight: 400,
+                lineHeight: 1.2,
+                color: "#0f172a",
+                marginBottom: 18,
+                letterSpacing: "-0.5px",
+              }}
+            >
+              Civic complaints,<br />
+              <span style={{ color: "#1a4fa0" }}>resolved faster.</span>
+            </h1>
+            <p
+              style={{
+                fontSize: 15,
+                color: "#6b7280",
+                lineHeight: 1.8,
+                maxWidth: 460,
+                marginBottom: 32,
+              }}
+            >
+              A unified platform connecting citizens with municipal authorities.
+              Report issues, track resolutions, and build better communities — all in one place.
+            </p>
+            <div style={{ display: "flex", gap: 12 }}>
+              <button
+                onClick={() => navigate("/login")}
+                style={{
+                  padding: "12px 28px",
+                  borderRadius: 10,
+                  border: "none",
+                  background: "#1a4fa0",
+                  color: "#fff",
+                  fontSize: 14,
+                  fontWeight: 500,
+                  cursor: "pointer",
+                  letterSpacing: "-0.2px",
+                }}
+              >
+                Get started free
+              </button>
+              <button
+                onClick={() => navigate("/login")}
+                style={{
+                  padding: "12px 28px",
+                  borderRadius: 10,
+                  border: "1px solid #d9dde6",
+                  background: "#fff",
+                  color: "#374151",
+                  fontSize: 14,
+                  fontWeight: 500,
+                  cursor: "pointer",
+                }}
+              >
+                Login to account
+              </button>
             </div>
           </div>
-          
-          <div className="row g-4">
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section
+        id="about"
+        style={{
+          padding: "60px 40px",
+          background: "#eef1f6",
+        }}
+      >
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <p
+            style={{
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.1em",
+              color: "#1a4fa0",
+              textTransform: "uppercase",
+              marginBottom: 8,
+            }}
+          >
+            About
+          </p>
+          <h2
+            style={{
+              fontSize: 26,
+              fontWeight: 400,
+              fontFamily: "'DM Serif Display', serif",
+              marginBottom: 8,
+              color: "#0f172a",
+            }}
+          >
+            About CivicConnect
+          </h2>
+          <p
+            style={{
+              fontSize: 15,
+              color: "#6b7280",
+              lineHeight: 1.8,
+              maxWidth: 700,
+              marginBottom: 32,
+            }}
+          >
+            CivicConnect is a government-backed civic platform that connects citizens with municipal
+            authorities. We make it easier to report issues, track their resolution, and collectively
+            build better communities. Our mission is to increase transparency, accountability, and
+            community engagement in civic services.
+          </p>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gap: 14,
+            }}
+          >
             {[
-              { icon: "📝", value: stats.complaints.toLocaleString(), label: "Complaints Filed", color: "primary" },
-              { icon: "✅", value: stats.resolved.toLocaleString(), label: "Issues Resolved", color: "success" },
-              { icon: "👥", value: stats.users.toLocaleString(), label: "Active Users", color: "warning" },
-              { icon: "🏙️", value: stats.cities, label: "Cities Covered", color: "info" }
-            ].map((stat, index) => (
-              <div className="col-md-3 col-sm-6" key={index}>
-                <div className="stat-card text-center p-4 rounded-4 bg-white shadow-sm border-0 h-100"
-                     style={{ transition: 'all 0.3s ease' }}
-                     onMouseEnter={(e) => {
-                       e.currentTarget.style.transform = 'translateY(-10px)';
-                       e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.1)';
-                     }}
-                     onMouseLeave={(e) => {
-                       e.currentTarget.style.transform = 'translateY(0)';
-                       e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
-                     }}>
-                  <div className={`stat-icon bg-${stat.color}-subtle rounded-circle d-inline-flex align-items-center justify-content-center mb-3`}
-                       style={{ width: '70px', height: '70px' }}>
-                    <span className={`text-${stat.color} fs-2`}>{stat.icon}</span>
-                  </div>
-                  <h3 className="display-6 fw-bold mb-2">{stat.value}</h3>
-                  <p className="text-muted mb-0">{stat.label}</p>
-                </div>
+              {
+                title: "Register & verify",
+                desc:
+                  "Sign up as Citizen or Officer. Officers submit Aadhaar, Voter ID, Passport, or Driving License for admin verification before access is granted.",
+                icon:
+                  "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z",
+              },
+              {
+                title: "File a complaint",
+                desc:
+                  "Submit your complaint with description, priority level, GPS location, photo attachment, and an optional suggestion for resolution.",
+                icon:
+                  "M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z",
+              },
+              {
+                title: "Track status",
+                desc:
+                  "Follow your complaint through every stage — Pending, In Progress, Approved, Reassigned, Resolved, or Rejected — updated in real-time.",
+                icon:
+                  "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z",
+              },
+              {
+                title: "Resolve & feedback",
+                desc:
+                  "Once resolved, receive an email and SMS notification. Share your rating and feedback to help improve civic services in your area.",
+                icon:
+                  "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z",
+              },
+            ].map((s, i) => (
+              <div
+                key={i}
+                style={{
+                  background: "#ffffff",
+                  borderRadius: 14,
+                  padding: "24px 20px",
+                  border: "1px solid #d9dde6",
+                }}
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="#1a4fa0"
+                  strokeWidth="1.5"
+                  style={{ marginBottom: 12 }}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d={s.icon}
+                  />
+                </svg>
+                <h4
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 600,
+                    marginBottom: 6,
+                    color: "#0f172a",
+                  }}
+                >
+                  {s.title}
+                </h4>
+                <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6 }}>
+                  {s.desc}
+                </p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="py-5">
-        <div className="container">
-          <div className="row justify-content-center mb-5">
-            <div className="col-lg-8 text-center">
-              <h2 className="display-5 fw-bold mb-3">How It Works</h2>
-              <p className="text-muted lead">Simple steps to make your voice heard</p>
-            </div>
-          </div>
-
-          <div className="row g-4">
+      {/* Services Section */}
+      <section
+        id="services"
+        style={{
+          padding: "60px 40px",
+          background: "#ffffff",
+          borderTop: "1px solid #d9dde6",
+        }}
+      >
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <p
+            style={{
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.1em",
+              color: "#1a4fa0",
+              textTransform: "uppercase",
+              marginBottom: 8,
+            }}
+          >
+            Services
+          </p>
+          <h2
+            style={{
+              fontSize: 26,
+              fontWeight: 400,
+              fontFamily: "'DM Serif Display', serif",
+              marginBottom: 4,
+              color: "#0f172a",
+            }}
+          >
+            Choose your account type
+          </h2>
+          <p style={{ fontSize: 14, color: "#6b7280", marginBottom: 32 }}>
+            Select the role that fits your needs
+          </p>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 16,
+            }}
+          >
             {[
-              { step: "1", icon: "📝", title: "Register", desc: "Create your citizen or officer account", color: "primary" },
-              { step: "2", icon: "🔍", title: "Report", desc: "File a complaint with details and photos", color: "success" },
-              { step: "3", icon: "📊", title: "Track", desc: "Monitor your complaint status in real-time", color: "warning" },
-              { step: "4", icon: "✅", title: "Resolve", desc: "Get notified when issue is resolved", color: "info" }
-            ].map((step, index) => (
-              <div className="col-lg-3 col-md-6" key={index}>
-                <div className="step-card p-4 rounded-4 position-relative overflow-hidden h-100"
-                     style={{
-                       backgroundColor: `var(--bs-${step.color}-bg-subtle)`,
-                       border: `2px solid var(--bs-${step.color})`,
-                       transition: 'all 0.3s ease'
-                     }}
-                     onMouseEnter={(e) => {
-                       e.currentTarget.style.transform = 'translateY(-10px)';
-                     }}
-                     onMouseLeave={(e) => {
-                       e.currentTarget.style.transform = 'translateY(0)';
-                     }}>
-                  <div className="step-number position-absolute top-0 end-0 bg-white text-dark fw-bold rounded-bottom-start px-3 py-1">
-                    {step.step}
-                  </div>
-                  <div className="text-center mb-4">
-                    <div className="step-icon mx-auto mb-3 rounded-circle d-flex align-items-center justify-content-center"
-                         style={{
-                           width: '80px',
-                           height: '80px',
-                           backgroundColor: `var(--bs-${step.color})`,
-                           color: 'white'
-                         }}>
-                      <span className="fs-2">{step.icon}</span>
-                    </div>
-                  </div>
-                  <h4 className="h5 fw-bold text-center mb-2">{step.title}</h4>
-                  <p className="text-muted text-center mb-0">{step.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* User Roles */}
-      <section className="py-5 bg-light">
-        <div className="container">
-          <div className="row justify-content-center mb-5">
-            <div className="col-lg-8 text-center">
-              <h2 className="display-5 fw-bold mb-3">Choose Your Role</h2>
-              <p className="text-muted lead">Select the account type that fits your needs</p>
-            </div>
-          </div>
-
-          <div className="row g-4">
-            {/* Citizen Card */}
-            <div className="col-lg-6">
-              <div className="role-card card border-0 shadow-lg overflow-hidden h-100"
-                   style={{ transition: 'all 0.3s ease' }}
-                   onMouseEnter={(e) => {
-                     e.currentTarget.style.transform = 'translateY(-10px)';
-                     e.currentTarget.style.boxShadow = '0 30px 50px rgba(13, 110, 253, 0.2)';
-                   }}
-                   onMouseLeave={(e) => {
-                     e.currentTarget.style.transform = 'translateY(0)';
-                     e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
-                   }}>
-                <div className="card-header bg-primary-gradient text-white py-4">
-                  <div className="d-flex align-items-center">
-                    <div className="role-icon bg-white text-primary rounded-circle d-flex align-items-center justify-content-center me-3"
-                         style={{ width: '60px', height: '60px' }}>
-                      <span className="fs-3">👤</span>
-                    </div>
-                    <div>
-                      <h3 className="h4 mb-1">Citizen</h3>
-                      <p className="mb-0 opacity-75">Report issues, track progress</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="card-body p-4">
-                  <ul className="list-unstyled mb-4">
-                    <li className="mb-2"><span className="text-success me-2">✓</span> File complaints easily</li>
-                    <li className="mb-2"><span className="text-success me-2">✓</span> Track resolution status</li>
-                    <li className="mb-2"><span className="text-success me-2">✓</span> Receive updates & alerts</li>
-                    <li><span className="text-success me-2">✓</span> View community issues</li>
-                  </ul>
-                  <button 
-                    className="btn btn-primary w-100 py-3 fw-bold"
-                    onClick={() => navigate("/register?role=citizen")}
+              {
+                title: "Citizen",
+                desc: "Report and track civic issues in your area",
+                features: [
+                  "File complaints easily",
+                  "Track resolution status",
+                  "Receive alerts & updates",
+                  "View community issues",
+                ],
+                bg: "#eef3ff",
+                tc: "#1a4fa0",
+                btnBg: "#1a4fa0",
+                btnLabel: "Register as citizen",
+                route: "/citizen-register?role=citizen",
+                icon:
+                  "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z",
+              },
+              {
+                title: "Municipal officer",
+                desc: "Manage and resolve assigned complaints",
+                features: [
+                  "Manage citizen complaints",
+                  "Update issue status",
+                  "Assign to departments",
+                  "Generate reports",
+                ],
+                bg: "#f0faf4",
+                tc: "#16a34a",
+                btnBg: "#16a34a",
+                btnLabel: "Register as officer",
+                route: "/officer-register?role=officer",
+                icon:
+                  "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z",
+              },
+              {
+                title: "Admin",
+                desc: "Oversee platform operations and all users",
+                features: [
+                  "Approve / reject users",
+                  "Assign departments",
+                  "Full dashboard access",
+                  "Analytics & reports",
+                ],
+                bg: "#f5f3ff",
+                tc: "#7c3aed",
+                btnBg: "#7c3aed",
+                btnLabel: "Admin login",
+                route: "/login",
+                icon:
+                  "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z",
+              },
+            ].map((r, i) => (
+              <div
+                key={i}
+                style={{
+                  background: "#ffffff",
+                  borderRadius: 16,
+                  border: "1px solid #d9dde6",
+                  overflow: "hidden",
+                }}
+              >
+                <div style={{ background: r.bg, padding: "24px 24px 20px" }}>
+                  <div
+                    style={{
+                      width: 44,
+                      height: 44,
+                      borderRadius: 10,
+                      background: "#fff",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginBottom: 14,
+                    }}
                   >
-                    Register as Citizen
+                    <svg
+                      width="22"
+                      height="22"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke={r.tc}
+                      strokeWidth="1.5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d={r.icon}
+                      />
+                    </svg>
+                  </div>
+                  <h4
+                    style={{
+                      fontSize: 15,
+                      fontWeight: 600,
+                      color: "#0f172a",
+                      marginBottom: 4,
+                    }}
+                  >
+                    {r.title}
+                  </h4>
+                  <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6 }}>
+                    {r.desc}
+                  </p>
+                </div>
+                <div style={{ padding: "20px 24px" }}>
+                  <ul
+                    style={{
+                      listStyle: "none",
+                      padding: 0,
+                      marginBottom: 20,
+                    }}
+                  >
+                    {r.features.map((f, j) => (
+                      <li
+                        key={j}
+                        style={{
+                          fontSize: 13,
+                          color: "#374151",
+                          padding: "5px 0",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                        }}
+                      >
+                        <svg
+                          width="14"
+                          height="14"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke={r.tc}
+                          strokeWidth="2.5"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <button
+                    onClick={() => navigate(r.route)}
+                    style={{
+                      width: "100%",
+                      padding: "10px",
+                      borderRadius: 8,
+                      border: "none",
+                      background: r.btnBg,
+                      color: "#fff",
+                      fontSize: 13,
+                      fontWeight: 500,
+                      cursor: "pointer",
+                    }}
+                  >
+                    {r.btnLabel}
                   </button>
                 </div>
               </div>
-            </div>
-
-            {/* Officer Card */}
-            <div className="col-lg-6">
-              <div className="role-card card border-0 shadow-lg overflow-hidden h-100"
-                   style={{ transition: 'all 0.3s ease' }}
-                   onMouseEnter={(e) => {
-                     e.currentTarget.style.transform = 'translateY(-10px)';
-                     e.currentTarget.style.boxShadow = '0 30px 50px rgba(25, 135, 84, 0.2)';
-                   }}
-                   onMouseLeave={(e) => {
-                     e.currentTarget.style.transform = 'translateY(0)';
-                     e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
-                   }}>
-                <div className="card-header bg-success-gradient text-white py-4">
-                  <div className="d-flex align-items-center">
-                    <div className="role-icon bg-white text-success rounded-circle d-flex align-items-center justify-content-center me-3"
-                         style={{ width: '60px', height: '60px' }}>
-                      <span className="fs-3">👮</span>
-                    </div>
-                    <div>
-                      <h3 className="h4 mb-1">Municipal Officer</h3>
-                      <p className="mb-0 opacity-75">Manage issues, update status</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="card-body p-4">
-                  <ul className="list-unstyled mb-4">
-                    <li className="mb-2"><span className="text-success me-2">✓</span> Manage citizen complaints</li>
-                    <li className="mb-2"><span className="text-success me-2">✓</span> Update issue status</li>
-                    <li className="mb-2"><span className="text-success me-2">✓</span> Assign to departments</li>
-                    <li><span className="text-success me-2">✓</span> Generate reports & analytics</li>
-                  </ul>
-                  <button 
-                    className="btn btn-success w-100 py-3 fw-bold"
-                    onClick={() => navigate("/register?role=officer")}
-                  >
-                    Register as Officer
-                  </button>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-5">
-        <div className="container">
-          <div className="row justify-content-center mb-5">
-            <div className="col-lg-8 text-center">
-              <h2 className="display-5 fw-bold mb-3">What Our Users Say</h2>
-              <p className="text-muted lead">Join thousands of satisfied users</p>
-            </div>
-          </div>
+      {/* Contact Section */}
+      <section
+        id="contact"
+        style={{
+          padding: "60px 40px",
+          background: "#eef1f6",
+          borderTop: "1px solid #d9dde6",
+        }}
+      >
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <p
+            style={{
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.1em",
+              color: "#1a4fa0",
+              textTransform: "uppercase",
+              marginBottom: 8,
+            }}
+          >
+            Contact
+          </p>
+          <h2
+            style={{
+              fontSize: 26,
+              fontWeight: 400,
+              fontFamily: "'DM Serif Display', serif",
+              marginBottom: 8,
+              color: "#0f172a",
+            }}
+          >
+            Get in touch
+          </h2>
+          <p
+            style={{
+              fontSize: 15,
+              color: "#6b7280",
+              lineHeight: 1.8,
+              maxWidth: 700,
+              marginBottom: 32,
+            }}
+          >
+            Have questions about CivicConnect, need support, or want to collaborate with your municipal
+            department? Reach out to us and we’ll get back to you as soon as possible.
+          </p>
 
-          <div className="row g-4">
-            {testimonials.map((testimonial, index) => (
-              <div className="col-lg-4" key={index}>
-                <div className="testimonial-card p-4 rounded-4 bg-white shadow-sm h-100 animate__animated animate__fadeInUp"
-                     style={{ animationDelay: `${index * 0.2}s` }}>
-                  <div className="d-flex align-items-center mb-4">
-                    <div className="testimonial-avatar bg-light rounded-circle d-flex align-items-center justify-content-center me-3"
-                         style={{ width: '60px', height: '60px' }}>
-                      <span className="fs-3">{testimonial.avatar}</span>
-                    </div>
-                    <div>
-                      <h5 className="fw-bold mb-1">{testimonial.name}</h5>
-                      <span className="badge bg-primary">{testimonial.role}</span>
-                    </div>
-                  </div>
-                  <p className="text-muted mb-0">"{testimonial.text}"</p>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 14,
+            }}
+          >
+            {[
+              {
+                title: "Location tracking",
+                desc:
+                  "Pin complaints on a map with precise GPS coordinates for faster resolution",
+                color: "#eef3ff",
+                tc: "#1a4fa0",
+                icon:
+                  "M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z",
+              },
+              {
+                title: "Real-time notifications",
+                desc:
+                  "Get email and SMS alerts at every stage of your complaint's journey",
+                color: "#f0faf4",
+                tc: "#16a34a",
+                icon:
+                  "M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9",
+              },
+              {
+                title: "Analytics dashboard",
+                desc:
+                  "Officers see department performance, recurring issues, and resolution rates",
+                color: "#f5f3ff",
+                tc: "#7c3aed",
+                icon:
+                  "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z",
+              },
+              {
+                title: "Document verification",
+                desc:
+                  "Secure Aadhaar, Voter ID, and Passport verification for officer accounts",
+                color: "#fff7ed",
+                tc: "#d97706",
+                icon:
+                  "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z",
+              },
+            ].map((f, i) => (
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  gap: 16,
+                  padding: "22px",
+                  borderRadius: 14,
+                  border: "1px solid #d9dde6",
+                  background: "#ffffff",
+                }}
+              >
+                <div
+                  style={{
+                    width: 42,
+                    height: 42,
+                    borderRadius: 10,
+                    background: f.color,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                  }}
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke={f.tc}
+                    strokeWidth="1.5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d={f.icon}
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h4
+                    style={{
+                      fontSize: 14,
+                      fontWeight: 600,
+                      marginBottom: 6,
+                      color: "#0f172a",
+                    }}
+                  >
+                    {f.title}
+                  </h4>
+                  <p style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.6 }}>
+                    {f.desc}
+                  </p>
                 </div>
               </div>
             ))}
@@ -397,167 +705,134 @@ const Home = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-5 bg-primary-gradient text-white">
-        <div className="container">
-          <div className="row justify-content-center text-center">
-            <div className="col-lg-8">
-              <h2 className="display-5 fw-bold mb-4">Ready to Transform Your Community?</h2>
-              <p className="lead mb-5 opacity-90">
-                Join thousands of citizens and officers making their communities better every day.
-                Start your journey with us today!
-              </p>
-              <div className="d-flex flex-wrap gap-3 justify-content-center">
-                <button 
-                  className="btn btn-light btn-lg fw-bold px-5 py-3"
-                  onClick={() => navigate("/register")}
-                >
-                  <span className="me-2">🚀</span> Get Started Free
-                </button>
-                <button 
-                  className="btn btn-outline-light btn-lg fw-bold px-5 py-3"
-                  onClick={() => navigate("/login")}
-                >
-                  <span className="me-2">🔐</span> Login Now
-                </button>
-              </div>
-            </div>
-          </div>
+      {/* CTA */}
+      <section
+        style={{
+          padding: "60px 40px",
+          background: "#1a4fa0",
+          textAlign: "center",
+        }}
+      >
+        <h2
+          style={{
+            fontFamily: "'DM Serif Display', serif",
+            fontSize: 32,
+            fontWeight: 400,
+            color: "#fff",
+            marginBottom: 14,
+          }}
+        >
+          Ready to transform your community?
+        </h2>
+        <p
+          style={{
+            fontSize: 15,
+            color: "#a8c4e8",
+            marginBottom: 32,
+            lineHeight: 1.7,
+          }}
+        >
+          Join thousands of citizens and officers making their communities better every day.
+        </p>
+        <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+          <button
+            onClick={() => navigate("/login")}
+            style={{
+              padding: "12px 32px",
+              borderRadius: 10,
+              border: "none",
+              background: "#fff",
+              color: "#1a4fa0",
+              fontSize: 14,
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            Get started free
+          </button>
+          <button
+            onClick={() => navigate("/login")}
+            style={{
+              padding: "12px 32px",
+              borderRadius: 10,
+              border: "1px solid rgba(255, 255, 255, 0.4)",
+              background: "transparent",
+              color: "#fff",
+              fontSize: 14,
+              fontWeight: 500,
+              cursor: "pointer",
+            }}
+          >
+            Login now
+          </button>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-dark text-white py-5">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-4 mb-4">
-              <h4 className="fw-bold mb-3">Civic Services</h4>
-              <p className="text-light opacity-75">
-                Bridging the gap between citizens and municipal authorities through technology.
-              </p>
-            </div>
-            <div className="col-lg-2 col-md-4 mb-4">
-              <h5 className="fw-bold mb-3">Quick Links</h5>
-              <ul className="list-unstyled">
-                <li className="mb-2"><a href="#!" className="text-light opacity-75 text-decoration-none">Home</a></li>
-                <li className="mb-2"><a href="#!" className="text-light opacity-75 text-decoration-none">About</a></li>
-                <li className="mb-2"><a href="#!" className="text-light opacity-75 text-decoration-none">Services</a></li>
-                <li><a href="#!" className="text-light opacity-75 text-decoration-none">Contact</a></li>
-              </ul>
-            </div>
-            <div className="col-lg-3 col-md-4 mb-4">
-              <h5 className="fw-bold mb-3">Contact</h5>
-              <ul className="list-unstyled">
-                <li className="mb-2 text-light opacity-75">📍 123 Civic Center, City</li>
-                <li className="mb-2 text-light opacity-75">📧 support@civicservices.com</li>
-                <li className="text-light opacity-75">📞 +91 98765 43210</li>
-              </ul>
-            </div>
+      <footer
+        style={{
+          background: "#0f172a",
+          padding: "32px 40px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div
+            style={{
+              width: 28,
+              height: 28,
+              background: "#1a4fa0",
+              borderRadius: 6,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <svg
+              width="14"
+              height="14"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="#fff"
+              strokeWidth="2"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+              />
+            </svg>
           </div>
-          <hr className="text-light opacity-25 my-4" />
-          <div className="text-center">
-            <p className="mb-0 text-light opacity-75">© 2024 Civic Services. All rights reserved.</p>
-          </div>
+          <span style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>
+            CivicConnect
+          </span>
         </div>
+        <div style={{ display: "flex", gap: 24 }}>
+          {[
+            { label: "Home", id: "home" },
+            { label: "About", id: "about" },
+            { label: "Services", id: "services" },
+            { label: "Contact", id: "contact" },
+          ].map((l) => (
+            <a
+              key={l.label}
+              href={`#${l.id}`}
+              style={{
+                fontSize: 12,
+                color: "#64748b",
+                textDecoration: "none",
+              }}
+            >
+              {l.label}
+            </a>
+          ))}
+        </div>
+        <p style={{ fontSize: 12, color: "#64748b" }}>
+          © 2024 CivicConnect. All rights reserved.
+        </p>
       </footer>
-
-      {/* Custom CSS */}
-      <style jsx>{`
-        .home-page {
-          overflow-x: hidden;
-        }
-        
-        .hero-section {
-          min-height: 100vh;
-          display: flex;
-          align-items: center;
-        }
-        
-        .hero-background {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 1;
-        }
-        
-        .bg-primary-gradient {
-          background: linear-gradient(135deg, #0d6efd 0%, #198754 100%);
-        }
-        
-        .bg-success-gradient {
-          background: linear-gradient(135deg, #198754 0%, #0d6efd 100%);
-        }
-        
-        .floating-elements {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          pointer-events: none;
-          z-index: 2;
-        }
-        
-        .floating-element {
-          position: absolute;
-          width: 100px;
-          height: 100px;
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 50%;
-          animation: float 20s infinite ease-in-out;
-        }
-        
-        @keyframes float {
-          0%, 100% { transform: translateY(0) rotate(0deg); }
-          50% { transform: translateY(-50px) rotate(180deg); }
-        }
-        
-        .feature-showcase-card {
-          transform: perspective(1000px) rotateY(5deg);
-          animation: floatCard 6s ease-in-out infinite;
-        }
-        
-        @keyframes floatCard {
-          0%, 100% { transform: perspective(1000px) rotateY(5deg) translateY(0); }
-          50% { transform: perspective(1000px) rotateY(5deg) translateY(-20px); }
-        }
-        
-        .step-card:hover .step-icon {
-          animation: bounce 0.5s ease;
-        }
-        
-        @keyframes bounce {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.1); }
-        }
-        
-        .role-card {
-          transition: all 0.3s ease;
-        }
-        
-        .role-card:hover {
-          transform: translateY(-10px);
-        }
-        
-        .testimonial-card {
-          transition: all 0.3s ease;
-        }
-        
-        .testimonial-card:hover {
-          transform: translateY(-5px);
-        }
-        
-        .btn {
-          border-radius: 12px !important;
-          transition: all 0.3s ease !important;
-        }
-        
-        .btn:hover {
-          transform: translateY(-2px);
-        }
-      `}</style>
     </div>
   );
 };
