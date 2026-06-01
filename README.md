@@ -4,9 +4,13 @@ A full-stack web application that allows citizens to submit, track, and manage c
 
 ---
 
-## 🌐 Live Demo
+## 🔗 Live Links
 
 **[Click Here to View Live App](https://civic-complaint-system-three.vercel.app)**
+
+- 🌐 Frontend: https://civic-complaint-system-three.vercel.app
+- ⚙️ Backend API: https://civic-complaint-system-xx8v.onrender.com
+- 🛠️ Admin Panel: https://civic-complaint-system-xx8v.onrender.com/admin
 
 ---
 
