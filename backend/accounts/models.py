@@ -444,29 +444,29 @@ from django.db import models
 from django.conf import settings
 
 
-class ComplaintReassign(models.Model):
-    complaint = models.ForeignKey(
-        "Complaint",
-        on_delete=models.CASCADE,
-        related_name="reassignments"
-    )
+# class ComplaintReassign(models.Model):
+#     complaint = models.ForeignKey(
+#         "Complaint",
+#         on_delete=models.CASCADE,
+#         related_name="reassignments"
+#     )
 
-    reassigned_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
-        limit_choices_to={"role": "ADMIN"}
-    )
+#     reassigned_by = models.ForeignKey(
+#         settings.AUTH_USER_MODEL,
+#         on_delete=models.SET_NULL,
+#         null=True,
+#         limit_choices_to={"role": "ADMIN"}
+#     )
 
-    reassigned_from = models.CharField(max_length=100)
-    reassigned_to = models.CharField(max_length=100)
+#     reassigned_from = models.CharField(max_length=100)
+#     reassigned_to = models.CharField(max_length=100)
 
-    reason = models.TextField(blank=True, null=True)
+#     reason = models.TextField(blank=True, null=True)
 
-    reassigned_at = models.DateTimeField(auto_now_add=True)
+#     reassigned_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f"Complaint #{self.complaint.id} reassigned"
+#     def __str__(self):
+#         return f"Complaint #{self.complaint.id} reassigned"
 
 from django.db import models
 from django.conf import settings
@@ -509,11 +509,11 @@ class ComplaintActionHistory(models.Model):
 
 # Proxy models for admin dashboard views
 # models.py
-class DistrictDashboard(Complaint):
-    class Meta:
-        proxy = True
-        verbose_name = "District Dashboard"
-        verbose_name_plural = "District Dashboard"
+# class DistrictDashboard(Complaint):
+#     class Meta:
+#         proxy = True
+#         verbose_name = "District Dashboard"
+#         verbose_name_plural = "District Dashboard"
 
 
 # models.py

@@ -38,7 +38,7 @@ class DepartmentAdmin(admin.ModelAdmin):
 # -----------------------------
 # User Admin
 # -----------------------------
-admin.site.unregister(User)
+# admin.site.unregister(User)
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = (
