@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import privateAPI from "./api/privateAxios";
+import privateAPI from "./api/client";
 import "animate.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {

@@ -1,7 +1,7 @@
 
 
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "./api/client";
 
 export default function StaffRegister() {
   const [formData, setFormData] = useState({
@@ -25,7 +25,7 @@ export default function StaffRegister() {
   // Fetch categories on component mount
   useEffect(() => {
     setLoadingCategories(true);
-    axios.get("http://127.0.0.1:8000/api/accounts/CategoryList/")
+    axios.get("/accounts/CategoryList/")
       .then((res) => {
         setCategories(res.data);
         setLoadingCategories(false);
@@ -41,7 +41,7 @@ export default function StaffRegister() {
   useEffect(() => {
     if (formData.category) {
       setLoadingDepartments(true);
-      axios.get(`http://127.0.0.1:8000/api/accounts/departments/?category=${formData.category}`)
+      axios.get(`/accounts/departments/?category=${formData.category}`)
         .then((res) => {
           setDepartments(res.data);
           setLoadingDepartments(false);
@@ -97,7 +97,7 @@ export default function StaffRegister() {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/accounts/staff/register/", 
+        "/accounts/staff/register/", 
         submitData, 
         {
           headers: {

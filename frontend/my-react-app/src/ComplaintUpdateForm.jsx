@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import axiosInstance from "./api/axios";
+import axiosInstance from "./api/client";
 import { useParams, useNavigate } from "react-router-dom";
 
 export default function ComplaintUpdateForm() {
@@ -47,7 +47,7 @@ export default function ComplaintUpdateForm() {
     });
 
     try {
-      await axiosInstance.put(`http://127.0.0.1:8000/api/citizen/complaints/update/%3Cint:complaint_id%3E/`, data);
+      await axiosInstance.put(`/citizen/complaints/update/${id}/`, data);
       alert("Complaint updated successfully!");
       navigate("/citizen/complaints/history"); // navigate back to history page
     } catch (err) {

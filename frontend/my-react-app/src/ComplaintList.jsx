@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import privateAPI from "./api/privateAxios";
+import privateAPI from "./api/client";
 import ComplaintMap from "./ComplaintMap";
 import "./ComplaintHistory.css";
 

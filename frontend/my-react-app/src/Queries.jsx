@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axiosInstance from "./api/axios";
+import axiosInstance from "./api/client";
 import { motion } from "framer-motion";
 
 function Queries() {

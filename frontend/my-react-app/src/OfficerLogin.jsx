@@ -1,6 +1,6 @@
 // frontend/src/pages/OfficerLogin.jsx
 import React, { useState } from 'react';
-import axios from '../api/axios';
+import axios from './api/client';
 import { useNavigate } from 'react-router-dom';
 
 export default function OfficerLogin() {
@@ -11,7 +11,7 @@ export default function OfficerLogin() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://127.0.0.1:8000/api/officer/login/', { username, password });
+      const res = await axios.post('/officer/login/', { username, password });
       localStorage.setItem('access_token', res.data.access);
       localStorage.setItem('refresh_token', res.data.refresh);
       localStorage.setItem('username', res.data.username);

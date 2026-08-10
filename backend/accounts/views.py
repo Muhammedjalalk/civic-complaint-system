@@ -1,4 +1,5 @@
 
+import os
 from django.http import JsonResponse
 
 def home(request):
@@ -95,10 +96,11 @@ def citizen_register(request):
     uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
     token = default_token_generator.make_token(user)
 
-    verification_url = request.build_absolute_uri(
-        reverse("citizen-verify-email") +
-        f"?uid={uidb64}&token={token}"
-    )
+    # Industrial practice: never hardcode a host, and never point the user at a
+    # raw backend/API URL. FRONTEND_URL is an environment variable set on the
+    # backend host (Render) so this works identically in dev and production.
+    frontend_url = os.environ.get("FRONTEND_URL", "http://localhost:5173").rstrip("/")
+    verification_url = f"{frontend_url}/verify-email/{uidb64}/{token}"
 
     # Send verification email asynchronously
     send_verification_email_task.delay(user.email, verification_url)

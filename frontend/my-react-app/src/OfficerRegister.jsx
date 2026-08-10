@@ -1,8 +1,8 @@
 
 
 import { useState, useEffect } from "react";
-import API from "./axiosConfig";
-import privateAPI from "./api/privateAxios";
+import API from "./api/client";
+import privateAPI from "./api/client";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";

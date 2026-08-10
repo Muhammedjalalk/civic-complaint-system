@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import privateAPI from "./api/privateAxios";
+import privateAPI from "./api/client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./TrackComplaint.css"; // Create this CSS file for custom styles

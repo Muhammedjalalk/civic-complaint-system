@@ -1,7 +1,7 @@
 
 
 import React, { useEffect, useState } from "react";
-import privateAPI from "./api/privateAxios";
+import privateAPI from "./api/client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 

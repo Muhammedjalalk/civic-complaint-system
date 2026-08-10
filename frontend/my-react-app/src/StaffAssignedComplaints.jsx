@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import privateAPI from "./api/privateAxios";
+import privateAPI, { mediaUrl } from "./api/client";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const StaffAssignedComplaints = () => {
@@ -44,23 +44,8 @@ const StaffAssignedComplaints = () => {
     }
   };
 
-  // Helper function to get full attachment URL - SAME AS OfficerComplaintView
-  const getAttachmentUrl = (attachment) => {
-    if (!attachment) return null;
-    
-    // If it's already a full URL
-    if (attachment.startsWith('http://') || attachment.startsWith('https://')) {
-      return attachment;
-    }
-    
-    // If it's a file path starting with /media/
-    if (attachment.startsWith('/media/')) {
-      return `http://127.0.0.1:8000${attachment}`;
-    }
-    
-    // If it's just a filename, assume it's in media folder
-    return `http://127.0.0.1:8000/media/${attachment}`;
-  };
+  // Helper function to get full attachment URL
+  const getAttachmentUrl = (attachment) => mediaUrl(attachment);
 
   // Logout function
   const handleLogout = async () => {

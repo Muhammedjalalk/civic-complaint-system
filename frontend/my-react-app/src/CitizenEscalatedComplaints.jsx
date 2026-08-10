@@ -2,7 +2,7 @@
 
 
   import React, { useEffect, useState } from "react";
-  import privateAPI from "./api/privateAxios";
+  import privateAPI from "./api/client";
   import { useNavigate, Link } from "react-router-dom";
   import "bootstrap/dist/css/bootstrap.min.css";
   import "animate.css";

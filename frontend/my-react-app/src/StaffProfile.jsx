@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "./api/privateAxios";
+import axios from "./api/client";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const StaffProfile = () => {

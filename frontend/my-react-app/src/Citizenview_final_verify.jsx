@@ -1,7 +1,7 @@
 
 
 import React, { useEffect, useState } from "react";
-import privateAPI from "./api/privateAxios"; // your axios instance with auth headers
+import privateAPI, { mediaUrl } from "./api/client"; // your axios instance with auth headers
 import { useNavigate } from "react-router-dom";
 
 export default function VerifiedComplaints() {
@@ -44,23 +44,8 @@ export default function VerifiedComplaints() {
     }
   };
 
-  // ✅ ADD THIS FUNCTION - Same as other components
-  const getAttachmentUrl = (attachment) => {
-    if (!attachment) return null;
-    
-    // If it's already a full URL
-    if (attachment.startsWith('http://') || attachment.startsWith('https://')) {
-      return attachment;
-    }
-    
-    // If it's a file path starting with /media/
-    if (attachment.startsWith('/media/')) {
-      return `http://127.0.0.1:8000${attachment}`;
-    }
-    
-    // If it's just a filename, assume it's in media folder
-    return `http://127.0.0.1:8000/media/${attachment}`;
-  };
+  // Full attachment URL, built via the centralized client helper
+  const getAttachmentUrl = (attachment) => mediaUrl(attachment);
 
   // Open feedback modal
   const openFeedbackModal = (complaint) => {

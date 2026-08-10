@@ -24,10 +24,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@4m-(-ruy-g0rsipze-7&^331dj$fgtj(o@kn-4&mp*x8%6qxb'
+# Falls back to the old hardcoded key only for local dev convenience —
+# ALWAYS set a real DJANGO_SECRET_KEY env var on Render/production.
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY',
+    'django-insecure-@4m-(-ruy-g0rsipze-7&^331dj$fgtj(o@kn-4&mp*x8%6qxb'
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Defaults to False (safe) — set DJANGO_DEBUG=True only in your local .env
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
 # ALLOWED_HOSTS = []
 
@@ -47,7 +53,11 @@ INSTALLED_APPS = [
 
 
 ]
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS: allow-all is convenient for early development but is not safe for
+# production (it lets any website make authenticated requests to your API).
+# Set CORS_ALLOW_ALL_ORIGINS_DEV=True locally if you need it, otherwise the
+# explicit CORS_ALLOWED_ORIGINS list further down is used.
+CORS_ALLOW_ALL_ORIGINS = os.environ.get('CORS_ALLOW_ALL_ORIGINS_DEV', 'False') == 'True'
 CORS_ALLOW_CREDENTIALS = True
 
 ALLOWED_HOSTS = [
@@ -60,6 +70,7 @@ ALLOWED_HOSTS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # must be first
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # serves static files in production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -106,11 +117,16 @@ WSGI_APPLICATION = 'civic_system.wsgi.application'
 INSTALLED_APPS += ["channels"]
 ASGI_APPLICATION = "civic_system.asgi.application"
 
+# Redis URL for the channel layer (WebSocket features / real-time suggestions).
+# Locally this defaults to a Redis instance on your machine; on Render, set
+# REDIS_URL to your managed Redis instance's connection string.
+REDIS_URL = os.environ.get("REDIS_URL", "redis://127.0.0.1:6379")
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [REDIS_URL],
         },
     },
 }
@@ -180,6 +196,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # collectstatic puts files here for Render to serve
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -190,7 +212,12 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+] + [
+    origin.strip()
+    for origin in os.environ.get("CORS_EXTRA_ORIGINS", "").split(",")
+    if origin.strip()
 ]
+# Example on Render: CORS_EXTRA_ORIGINS=https://your-project.vercel.app
 
 
 

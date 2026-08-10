@@ -1,7 +1,7 @@
 
 
 import React, { useEffect, useState } from "react";
-import axios from "./api/privateAxios";
+import axios, { mediaUrl } from "./api/client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "animate.css";
 import MapModal from "./MapModal"; // Import the MapModal component
@@ -132,22 +132,7 @@ const OfficerComplaintView = () => {
   };
 
   // Helper function to get full attachment URL
-  const getAttachmentUrl = (attachment) => {
-    if (!attachment) return null;
-    
-    // If it's already a full URL
-    if (attachment.startsWith('http://') || attachment.startsWith('https://')) {
-      return attachment;
-    }
-    
-    // If it's a file path starting with /media/
-    if (attachment.startsWith('/media/')) {
-      return `http://127.0.0.1:8000${attachment}`;
-    }
-    
-    // If it's just a filename, assume it's in media folder
-    return `http://127.0.0.1:8000/media/${attachment}`;
-  };
+  const getAttachmentUrl = (attachment) => mediaUrl(attachment);
 
   // ✅ Open Map Modal with Complaint Location
   const openMapModal = (complaint) => {

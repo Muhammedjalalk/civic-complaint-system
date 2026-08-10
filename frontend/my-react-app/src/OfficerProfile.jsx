@@ -2,7 +2,7 @@
 
 
 import React, { useEffect, useState } from "react";
-import privateAPI from "./api/privateAxios"; // JWT axios
+import privateAPI from "./api/client"; // JWT axios
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 

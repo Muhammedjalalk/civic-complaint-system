@@ -2,7 +2,7 @@
 
 
 import { useState, useEffect } from "react";
-import API from "./axiosConfig";
+import API from "./api/client";
 import { useNavigate, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "animate.css";

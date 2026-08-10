@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import privateAPI from "./api/privateAxios";
+import privateAPI from "./api/client";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function CitizenTrackComplaint() {

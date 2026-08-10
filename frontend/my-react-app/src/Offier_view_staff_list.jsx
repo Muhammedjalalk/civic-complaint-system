@@ -1,7 +1,7 @@
 
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "./api/client";
 
 export default function PendingStaffList() {
   const [staffList, setStaffList] = useState([]);
@@ -15,8 +15,7 @@ export default function PendingStaffList() {
   const fetchPendingStaff = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/accounts/officer/staff-list/",
-        { withCredentials: true } // use if backend requires session auth
+        "/accounts/officer/staff-list/"
       );
       setStaffList(response.data.pending_staff);
     } catch (err) {
@@ -28,9 +27,8 @@ export default function PendingStaffList() {
   const handleStatusUpdate = async (staffId, status) => {
     try {
       await axios.post(
-        `http://127.0.0.1:8000/api/officer/staff/${staffId}/update-status/`,
-        { status },
-        { withCredentials: true } // use if backend requires session auth
+        `/accounts/officer/staff/${staffId}/update-status/`,
+        { status }
       );
 
       // Remove staff from the list after approving/rejecting
