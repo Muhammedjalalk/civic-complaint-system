@@ -100,19 +100,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'civic_system.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default':{
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'civic_final_10',
-#         'USER': 'root',
-#         'PASSWORD': 'vT9@!3wQn#L7pD$z',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#     }
-# }
 
 INSTALLED_APPS += ["channels"]
 ASGI_APPLICATION = "civic_system.asgi.application"
@@ -131,17 +119,15 @@ CHANNEL_LAYERS = {
     },
 }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT', '3306'),
-    }
-}
+import dj_database_url
 
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
+}
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
