@@ -103,7 +103,7 @@ def citizen_register(request):
     verification_url = f"{frontend_url}/verify-email/{uidb64}/{token}"
 
     # Send verification email asynchronously
-    send_verification_email_task.delay(user.email, verification_url)
+   send_verification_email_task(user.email, verification_url)
 
     # -------------------------------
     # Response
