@@ -101,9 +101,8 @@ def citizen_register(request):
     # backend host (Render) so this works identically in dev and production.
     frontend_url = os.environ.get("FRONTEND_URL", "http://localhost:5173").rstrip("/")
     verification_url = f"{frontend_url}/verify-email/{uidb64}/{token}"
-
     # Send verification email asynchronously
-   send_verification_email_task(user.email, verification_url)
+    send_verification_email_task(user.email, verification_url)
 
     # -------------------------------
     # Response
